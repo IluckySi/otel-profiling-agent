@@ -39,12 +39,14 @@ const (
 
 // StartPIDEventProcessor spawns a goroutine to process PID events.
 func (t *Tracer) StartPIDEventProcessor(ctx context.Context) error {
+	log.Errorf("Ilucky...events.go.StartPIDEventProcessor...")
 	go t.processPIDEvents(ctx)
 	return t.populatePIDs(ctx)
 }
 
 // Process the PID events that are incoming in the Tracer channel.
 func (t *Tracer) processPIDEvents(ctx context.Context) {
+	log.Errorf("Ilucky...events.go.processPIDEvents...")
 	pidCleanupTicker := time.NewTicker(t.intervals.PIDCleanupInterval())
 	defer pidCleanupTicker.Stop()
 	for {

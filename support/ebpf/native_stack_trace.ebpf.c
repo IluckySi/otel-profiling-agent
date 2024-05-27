@@ -798,6 +798,7 @@ int unwind_native(struct pt_regs *ctx) {
 
 static inline
 int collect_trace(struct pt_regs *ctx) {
+  ERROR_PRINT("Ilucky...native_stack_trace.pebf.c...collect_trace...");
   // Get the PID and TGID register.
   u64 id = bpf_get_current_pid_tgid();
   u64 pid = id >> 32;

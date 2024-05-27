@@ -216,6 +216,7 @@ func (pm *ProcessManager) handleNewInterpreter(pr process.Process, m *Mapping,
 // handleNewMapping processes new file backed mappings
 func (pm *ProcessManager) handleNewMapping(pr process.Process, m *Mapping,
 	elfRef *pfelf.Reference) error {
+	log.Errorf("Ilucky...processinfo.go...handleNewMapping...")
 	// Resolve executable info first
 	ei, err := pm.eim.AddOrIncRef(m.FileID, elfRef)
 	if err != nil {
@@ -320,6 +321,7 @@ func (pm *ProcessManager) getELFInfo(pr process.Process, mapping *process.Mappin
 
 // processNewExecMapping is the logic to add a new process.Mapping to processmanager.
 func (pm *ProcessManager) processNewExecMapping(pr process.Process, mapping *process.Mapping) {
+	log.Errorf("Ilucky...processinfo.go...processNewExecMapping...")
 	// Filter uninteresting mappings
 	if mapping.Inode == 0 && !mapping.IsVDSO() {
 		return
@@ -418,6 +420,7 @@ func (pm *ProcessManager) processRemovedMappings(pid libpf.PID, mappings []libpf
 // TODO: Periodic synchronization of mappings for every tracked PID.
 func (pm *ProcessManager) synchronizeMappings(pr process.Process,
 	mappings []process.Mapping) bool {
+	log.Errorf("Ilucky...processinfo.go...synchronizeMappings...")
 	newProcess := true
 	pid := pr.PID()
 	mpAdd := make(map[libpf.Address]*process.Mapping, len(mappings))
@@ -540,6 +543,7 @@ func (pm *ProcessManager) ProcessPIDExit(pid libpf.PID) bool {
 }
 
 func (pm *ProcessManager) SynchronizeProcess(pr process.Process) {
+	log.Errorf("Ilucky...processinfo.go.SynchronizeProcess...")
 	pid := pr.PID()
 	log.Debugf("= PID: %v", pid)
 

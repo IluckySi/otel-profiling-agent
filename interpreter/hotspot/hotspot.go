@@ -1837,6 +1837,7 @@ func (d *hotspotInstance) initVMData() (hotspotVMData, error) {
 // https://github.com/openjdk/jdk/blob/jdk-9%2B181/hotspot/src/share/vm/jvmci/vmStructs_jvmci.cpp#L48
 // https://github.com/openjdk/jdk/blob/jdk-22%2B10/src/hotspot/share/jvmci/vmStructs_jvmci.cpp#L49
 func locateJvmciVMStructs(ef *pfelf.File) (libpf.Address, error) {
+	log.Errorf("Ilucky...hotspot.go...locateJvmciVMStructs...")
 	const maxDataReadSize = 1 * 1024 * 1024   // seen in practice: 192 KiB
 	const maxRodataReadSize = 4 * 1024 * 1024 // seen in practice: 753 KiB
 
@@ -1881,9 +1882,11 @@ func locateJvmciVMStructs(ef *pfelf.File) (libpf.Address, error) {
 	return libpf.Address(dataSec.Addr + uint64(offs) - 8), nil
 }
 
+// TODO: Ilucky...core...
 // Loader is the main function for ProcessManager to recognize and hook the HotSpot
 // libjvm for enabling JVM unwinding and symbolization.
 func Loader(_ interpreter.EbpfHandler, info *interpreter.LoaderInfo) (interpreter.Data, error) {
+	log.Errorf("Ilucky...hotspot.go...Loader...")
 	if !libjvmRegex.MatchString(info.FileName()) {
 		return nil, nil
 	}

@@ -121,6 +121,7 @@ func NewExecutableInfoManager(
 // of getters and more complicated locking semantics.
 func (mgr *ExecutableInfoManager) AddOrIncRef(fileID host.FileID,
 	elfRef *pfelf.Reference) (ExecutableInfo, error) {
+	log.Errorf("Ilucky...manager.go...AddOrIncRef...")
 	var (
 		intervalData sdtypes.IntervalData
 		tsdInfo      *tpbase.TSDInfo
@@ -297,6 +298,7 @@ type executableInfoManagerState struct {
 // interpreter data.
 func (state *executableInfoManagerState) detectAndLoadInterpData(
 	loaderInfo *interpreter.LoaderInfo) interpreter.Data {
+	log.Errorf("Ilucky...mananger.go...detectAndLoadInterpData...")
 	// Ask all interpreter loaders whether they want to handle this executable.
 	for _, loader := range state.interpreterLoaders {
 		data, err := loader(state.ebpf, loaderInfo)
