@@ -202,8 +202,8 @@ func collectIntervalCacheMetrics(ctx context.Context, cache nativeunwind.Interva
 // path.
 func NewTracer(ctx context.Context, rep reporter.SymbolReporter, intervals Intervals,
 	includeTracers []bool, filterErrorFrames bool) (*Tracer, error) {
-	log.Errorf("Ilucky...tracer/tracer.go.NewTracer...")
-	kernelSymbols, err := proc.GetKallsyms("/proc/kallsyms")
+	log.Errorf("Ilucky...tracer.go.NewTracer...")
+	kernelSymbols, err := proc.GetKallsyms("/proc/kallsyms") // Ilucky.../proc/kallsyms保存的是Linux内核中所有符号的地址和名称的映射关系...
 	if err != nil {
 		return nil, fmt.Errorf("failed to read kernel symbols: %v", err)
 	}
@@ -444,6 +444,7 @@ func loadAllMaps(coll *cebpf.CollectionSpec, ebpfMaps map[string]*cebpf.Map) err
 	}
 
 	for mapName, mapSpec := range coll.Maps {
+		log.Errorf("Ilucky...tracer.go.loadAllMaps...mapName=%s,mapSpec=%s", mapName, mapSpec)
 		if newSize, ok := adaption[mapName]; ok {
 			log.Debugf("Size of eBPF map %s: %v", mapName, newSize)
 			mapSpec.MaxEntries = newSize

@@ -315,7 +315,7 @@ func mainWithExitCode() exitCode {
 	if err != nil {
 		msg := fmt.Sprintf("Failed to start reporting: %v", err)
 		log.Error(msg)
-		return exitFailure // TODO: Ilucky...for debug
+		return exitFailure
 	}
 
 	metrics.SetReporter(rep)

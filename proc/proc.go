@@ -27,6 +27,7 @@ const defaultMountPoint = "/proc"
 
 // GetKallsyms returns SymbolMap for kernel symbols from /proc/kallsyms.
 func GetKallsyms(kallsymsPath string) (*libpf.SymbolMap, error) {
+	log.Errorf("Ilucky...tracer.go.GetKallsyms...")
 	var address uint64
 	var symbol string
 
