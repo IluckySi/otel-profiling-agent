@@ -173,13 +173,15 @@ func mainWithExitCode() exitCode {
 		}
 	}
 
-	if err = tracer.ProbeBPFSyscall(); err != nil {
+	log.Error(fmt.Sprintf("Ilucky...main.go...tracer.ProbeBPFSyscall()...");
+	if err = tracer.ProbeBPFSyscall(); err != nil { // TODO: Ilucky...core...
 		msg := fmt.Sprintf("Failed to probe eBPF syscall: %v", err)
 		log.Error(msg)
 		return exitFailure
 	}
 
-	if err = tracer.ProbeTracepoint(); err != nil {
+	log.Error(fmt.Sprintf("Ilucky...main.go...tracer.ProbeTracepoint()...");
+	if err = tracer.ProbeTracepoint(); err != nil { // TODO: Ilucky...core...
 		msg := fmt.Sprintf("Failed to probe tracepoint: %v", err)
 		log.Error(msg)
 		return exitFailure
@@ -332,7 +334,7 @@ func mainWithExitCode() exitCode {
 	defer reportermetrics.Start(mainCtx, rep, 60*time.Second)()
 
 	// Load the eBPF code and map definitions
-	trc, err := tracer.NewTracer(mainCtx, rep, times, includeTracers, !argSendErrorFrames)
+	trc, err := tracer.NewTracer(mainCtx, rep, times, includeTracers, !argSendErrorFrames) // TODO: Ilucky...core...
 	if err != nil {
 		msg := fmt.Sprintf("Failed to load eBPF tracer: %s", err)
 		log.Error(msg)
@@ -350,7 +352,7 @@ func mainWithExitCode() exitCode {
 	log.Debug("Completed initial PID listing")
 
 	// Attach our tracer to the perf event
-	if err := trc.AttachTracer(argSamplesPerSecond); err != nil {
+	if err := trc.AttachTracer(argSamplesPerSecond); err != nil { // TODO: Ilucky...core...
 		msg := fmt.Sprintf("Failed to attach to perf event: %v", err)
 		log.Error(msg)
 		return exitFailure
@@ -369,7 +371,7 @@ func mainWithExitCode() exitCode {
 		}
 	}
 
-	if err := trc.AttachSchedMonitor(); err != nil {
+	if err := trc.AttachSchedMonitor(); err != nil { // TODO: Ilucky...core...
 		msg := fmt.Sprintf("Failed to attach scheduler monitor: %v", err)
 		log.Error(msg)
 		return exitFailure
@@ -379,7 +381,7 @@ func mainWithExitCode() exitCode {
 	// change this log line update also the system test.
 	log.Printf("Attached sched monitor")
 
-	if err := startTraceHandling(mainCtx, rep, times, trc); err != nil {
+	if err := startTraceHandling(mainCtx, rep, times, trc); err != nil { // TODO: Ilucky...core...
 		msg := fmt.Sprintf("Failed to start trace handling: %v", err)
 		log.Error(msg)
 		return exitFailure

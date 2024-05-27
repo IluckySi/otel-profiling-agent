@@ -58,6 +58,7 @@ func GetCurrentKernelVersion() (major, minor, patch uint32, err error) {
 // ProbeTracepoint checks if tracepoints are available on the system, so we can attach
 // our eBPF code there.
 func ProbeTracepoint() error {
+	log.Error("Ilucky...probe_linux.go.ProbeTracepoint...")
 	ins := asm.Instructions{
 		// set exit code to 0
 		asm.Mov.Imm(asm.R0, 0),
