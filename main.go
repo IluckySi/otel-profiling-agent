@@ -258,8 +258,9 @@ func mainWithExitCode() exitCode {
 
 	times := config.GetTimes()
 
+	log.Errorf("Ilucky...main.go...parseTracers...argTracers=%s", argTracers)
 	log.Debugf("Determining tracers to include")
-	includeTracers, err := parseTracers(argTracers)
+	includeTracers, err := parseTracers(argTracers) // TODO: Ilucky...core...
 	if err != nil {
 		msg := fmt.Sprintf("Failed to parse the included tracers: %s", err)
 		log.Error(msg)
@@ -283,6 +284,9 @@ func mainWithExitCode() exitCode {
 
 	// TODO: Maybe abort execution if (some) metadata can not be collected
 	hostMetadataMap = metadataCollector.GetHostMetadata()
+	for k, v := range hostMetadataMap {
+		log.Errorf("Ilucky...main.go...hostMetadataMap...key=%s,value=%s", k, v)
+	}
 
 	if bpfJITEnabled, found := hostMetadataMap["host:sysctl/net.core.bpf_jit_enable"]; found {
 		if bpfJITEnabled == "0" {
@@ -311,7 +315,7 @@ func mainWithExitCode() exitCode {
 	if err != nil {
 		msg := fmt.Sprintf("Failed to start reporting: %v", err)
 		log.Error(msg)
-		return exitFailure
+		// return exitFailure  // TODO: Ilucky...for debug
 	}
 
 	metrics.SetReporter(rep)
