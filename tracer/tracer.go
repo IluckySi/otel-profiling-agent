@@ -21,6 +21,7 @@ import (
 	cebpf "github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/link"
 	lru "github.com/elastic/go-freelru"
+	"github.com/elastic/go-perf"
 	log "github.com/sirupsen/logrus"
 	"github.com/zeebo/xxh3"
 
@@ -201,6 +202,7 @@ func collectIntervalCacheMetrics(ctx context.Context, cache nativeunwind.Interva
 // path.
 func NewTracer(ctx context.Context, rep reporter.SymbolReporter, intervals Intervals,
 	includeTracers []bool, filterErrorFrames bool) (*Tracer, error) {
+	log.Errorf("Ilucky...tracer/tracer.go.NewTracer...")
 	kernelSymbols, err := proc.GetKallsyms("/proc/kallsyms")
 	if err != nil {
 		return nil, fmt.Errorf("failed to read kernel symbols: %v", err)
@@ -267,8 +269,8 @@ func NewTracer(ctx context.Context, rep reporter.SymbolReporter, intervals Inter
 		transmittedFallbackSymbols: transmittedFallbackSymbols,
 		triggerPIDProcessing:       make(chan bool, 1),
 		pidEvents:                  make(chan libpf.PID, pidEventBufferSize),
-		ebpfMaps:                   ebpfMaps,
-		ebpfProgs:                  ebpfProgs,
+		ebpfMaps:                   ebpfMaps,  // TODO: Ilucky...core...
+		ebpfProgs:                  ebpfProgs, // TODO: Ilucky...core...
 		hooks:                      make(map[hookPoint]link.Link),
 		intervals:                  intervals,
 		hasBatchOperations:         hasBatchOperations,
@@ -327,6 +329,7 @@ func buildStackDeltaTemplates(coll *cebpf.CollectionSpec) error {
 // by the embedded elf file and loads these into the kernel.
 func initializeMapsAndPrograms(includeTracers []bool, kernelSymbols *libpf.SymbolMap) (
 	ebpfMaps map[string]*cebpf.Map, ebpfProgs map[string]*cebpf.Program, err error) {
+	log.Errorf("Ilucky...tracer/tracer.go.initializeMapsAndPrograms...")
 	// Loading specifications about eBPF programs and maps from the embedded elf file
 	// does not load them into the kernel.
 	// A collection specification holds the information about eBPF programs and maps.
