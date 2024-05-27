@@ -543,7 +543,6 @@ func (pm *ProcessManager) ProcessPIDExit(pid libpf.PID) bool {
 }
 
 func (pm *ProcessManager) SynchronizeProcess(pr process.Process) {
-	log.Errorf("Ilucky...processinfo.go.SynchronizeProcess...")
 	pid := pr.PID()
 	log.Debugf("= PID: %v", pid)
 
@@ -551,6 +550,7 @@ func (pm *ProcessManager) SynchronizeProcess(pr process.Process) {
 	if pid != 677596 {
 		return
 	}
+	log.Errorf("Ilucky...processinfo.go.SynchronizeProcess...pid=%d", pid)
 
 	pm.mappingStats.numProcAttempts.Add(1)
 	start := time.Now()
