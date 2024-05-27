@@ -218,7 +218,7 @@ func (pm *ProcessManager) handleNewMapping(pr process.Process, m *Mapping,
 	elfRef *pfelf.Reference) error {
 	log.Errorf("Ilucky...processinfo.go...handleNewMapping...")
 	// Resolve executable info first
-	ei, err := pm.eim.AddOrIncRef(m.FileID, elfRef)
+	ei, err := pm.eim.AddOrIncRef(m.FileID, elfRef) // Ilucky...core...
 	if err != nil {
 		return err
 	}
@@ -232,7 +232,7 @@ func (pm *ProcessManager) handleNewMapping(pr process.Process, m *Mapping,
 	defer pm.mu.Unlock()
 
 	// Update the eBPF maps with information about this mapping.
-	_, err = pm.updatePidInformation(pid, m)
+	_, err = pm.updatePidInformation(pid, m) // TODO: Ilucky...???
 	if err != nil {
 		return err
 	}
@@ -322,6 +322,7 @@ func (pm *ProcessManager) getELFInfo(pr process.Process, mapping *process.Mappin
 // processNewExecMapping is the logic to add a new process.Mapping to processmanager.
 func (pm *ProcessManager) processNewExecMapping(pr process.Process, mapping *process.Mapping) {
 	log.Errorf("Ilucky...processinfo.go...processNewExecMapping...")
+	log.Errorf("Ilucky...processinfo.go...processNewExecMapping...pr.pid=%d, pr.GetMappings=%s", pr.PID(), pr.GetMappingFile(mapping))
 	// Filter uninteresting mappings
 	if mapping.Inode == 0 && !mapping.IsVDSO() {
 		return
@@ -351,7 +352,7 @@ func (pm *ProcessManager) processNewExecMapping(pr process.Process, mapping *pro
 		return
 	}
 
-	if err := pm.handleNewMapping(pr,
+	if err := pm.handleNewMapping(pr, // Ilucky...core...
 		&Mapping{
 			FileID:     info.fileID,
 			Vaddr:      libpf.Address(mapping.Vaddr),
@@ -468,14 +469,14 @@ func (pm *ProcessManager) synchronizeMappings(pr process.Process,
 	for _, mapping := range mpAdd {
 		// Output memory usage in debug builds.
 		memorydebug.DebugLogMemoryUsage()
-		pm.processNewExecMapping(pr, mapping)
+		pm.processNewExecMapping(pr, mapping) // Ilucky...core...
 	}
 
 	// Update interpreter plugins about the changed mappings
 	if pm.interpreterTracerEnabled {
 		pm.mu.Lock()
 		for _, instance := range pm.interpreters[pid] {
-			err := instance.SynchronizeMappings(pm.ebpf, pm.reporter, pr, mappings)
+			err := instance.SynchronizeMappings(pm.ebpf, pm.reporter, pr, mappings) // TODO: Ilucky...core...
 			if err != nil {
 				if alive, _ := proc.IsPIDLive(pid); alive {
 					log.Errorf("Failed to handle new anonymous mapping for PID %d: %v", pid, err)
@@ -550,6 +551,7 @@ func (pm *ProcessManager) SynchronizeProcess(pr process.Process) {
 	if pid != 677596 {
 		return
 	}
+	// TODO: Ilucky...尽量少打印一些日志...
 	log.Errorf("Ilucky...processinfo.go.SynchronizeProcess...pid=%d", pid)
 
 	pm.mappingStats.numProcAttempts.Add(1)
@@ -602,7 +604,7 @@ func (pm *ProcessManager) SynchronizeProcess(pr process.Process) {
 	libpf.AtomicUpdateMaxUint32(&pm.mappingStats.maxProcParseUsec, uint32(elapsed.Microseconds()))
 	pm.mappingStats.totalProcParseUsec.Add(uint32(elapsed.Microseconds()))
 
-	if pm.synchronizeMappings(pr, mappings) {
+	if pm.synchronizeMappings(pr, mappings) { // Ilucky...core...
 		log.Debugf("+ PID: %v", pid)
 		// TODO: Fine-grained reported_pids handling (evaluate per-PID mapping
 		// synchronization based on per-PID state such as time since last

@@ -335,6 +335,7 @@ void breadcrumb_fixup(HotspotUnwindInfo *ui) {
 __attribute__((always_inline)) inline static
 ErrorCode hotspot_handle_prologue(const CodeBlobInfo *cbi, HotspotUnwindInfo *ui,
                                   HotspotUnwindAction *action) {
+  DEBUG_PRINT("Ilucky...hotspot_tracer.ebpf.c...hotspot_handle_prologue...");
   // In the prologue code. It generally consists of stack 'banging' (check for stack
   // overflow), pushing FP, and finally allocating rest of the stack of 'frame_size'.
   if (ui->pc >= cbi->code_start + cbi->frame_comp - 4) {
@@ -355,6 +356,7 @@ ErrorCode hotspot_handle_prologue(const CodeBlobInfo *cbi, HotspotUnwindInfo *ui
 __attribute__((always_inline)) inline static
 ErrorCode hotspot_handle_prologue(const CodeBlobInfo *cbi, HotspotUnwindInfo *ui,
                                   HotspotUnwindAction *action) {
+  DEBUG_PRINT("Ilucky...hotspot_tracer.ebpf.c...hotspot_handle_prologue...");
   // On ARM64, the prologue consists of various assembly snippets, most of which we aren't really
   // concerned with. This includes stuff like stack banging (which, other than the name might
   // suggest, doesn't actually write SP directly), initializing SVE registers and similar setup
@@ -509,6 +511,7 @@ __attribute__((always_inline)) inline static
 ErrorCode hotspot_handle_nmethod(const CodeBlobInfo *cbi, Trace *trace,
                                  HotspotUnwindInfo *ui, HotspotProcInfo *ji,
                                  HotspotUnwindAction *action) {
+  DEBUG_PRINT("Ilucky...hotspot_tracer.ebpf.c...hotspot_handle_nmethod...");
   // setup frame subtype, and get the native method _compile_id as pointer cookie
   // as it is unique to the compilation result
 
@@ -717,6 +720,7 @@ ErrorCode hotspot_execute_unwind_action(CodeBlobInfo *cbi, HotspotUnwindAction a
 __attribute__((always_inline)) inline static
 ErrorCode hotspot_read_codeblob(const UnwindState *state, const HotspotProcInfo *ji,
                                 HotspotUnwindScratchSpace *scratch, CodeBlobInfo *cbi) {
+  DEBUG_PRINT("Ilucky...hotspot_tracer.ebpf.c...hotspot_read_codeblob...");
   // Find the CodeBlob (JIT function metadata) for this PC.
   cbi->address = hotspot_find_codeblob(state, ji);
   if (!cbi->address) {
@@ -779,6 +783,7 @@ read_error_exit:
 
 // hotspot_unwind_one_frame fully unwinds one HotSpot frame
 static ErrorCode hotspot_unwind_one_frame(PerCPURecord *record, HotspotProcInfo *ji) {
+  DEBUG_PRINT("Ilucky...hotspot_tracer.ebpf.c...hotspot_unwind_one_frame...");
   UnwindState *state = &record->state;
   Trace *trace = &record->trace;
   HotspotUnwindInfo ui;

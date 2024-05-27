@@ -164,7 +164,7 @@ func (mgr *ExecutableInfoManager) AddOrIncRef(fileID host.FileID,
 	}
 
 	// Load the data into BPF maps.
-	ref, gaps, err = state.loadDeltas(fileID, intervalData.Deltas)
+	ref, gaps, err = state.loadDeltas(fileID, intervalData.Deltas) // TODO: ilucky...???
 	if err != nil {
 		return ExecutableInfo{}, fmt.Errorf("failed to load deltas: %w", err)
 	}
@@ -175,7 +175,7 @@ func (mgr *ExecutableInfoManager) AddOrIncRef(fileID host.FileID,
 	// Insert a corresponding record into our map.
 	info = &entry{
 		ExecutableInfo: ExecutableInfo{
-			Data:    state.detectAndLoadInterpData(loaderInfo),
+			Data:    state.detectAndLoadInterpData(loaderInfo), // TODO: ilucky...
 			TSDInfo: tsdInfo,
 		},
 		mapRef: ref,
@@ -301,6 +301,7 @@ func (state *executableInfoManagerState) detectAndLoadInterpData(
 	log.Errorf("Ilucky...mananger.go...detectAndLoadInterpData...")
 	// Ask all interpreter loaders whether they want to handle this executable.
 	for _, loader := range state.interpreterLoaders {
+		log.Errorf("Ilucky...mananger.go...detectAndLoadInterpData..._loader=%v", loader)
 		data, err := loader(state.ebpf, loaderInfo)
 		if err != nil {
 			if errors.Is(err, os.ErrNotExist) {

@@ -362,6 +362,7 @@ func (it *hotspotIntrospectionTable) resolveSymbols(ef *pfelf.File, symNames []s
 			continue
 		}
 		addr, err := ef.LookupSymbolAddress(libpf.SymbolName(s))
+		log.Error("Ilucky...hotspot.go...resolveSymols...symName=%s, addr=%s", i, addr)
 		if err != nil {
 			return fmt.Errorf("symbol '%v' not found: %w", s, err)
 		}
@@ -1157,6 +1158,7 @@ func (d *hotspotInstance) Detach(ebpf interpreter.EbpfHandler, pid libpf.PID) er
 
 // gatherHeapInfo collects information about HotSpot heaps.
 func (d *hotspotInstance) gatherHeapInfo(vmd *hotspotVMData) (*heapInfo, error) {
+	log.Errorf("Ilucky...hotspot.go...gatherHeapInfo...")
 	info := &heapInfo{}
 
 	// Determine the location of heap pointers
@@ -1236,6 +1238,7 @@ func (d *hotspotInstance) gatherHeapInfo(vmd *hotspotVMData) (*heapInfo, error) 
 // addJitArea inserts an entry into the PID<->interpreter BPF map.
 func (d *hotspotInstance) addJitArea(ebpf interpreter.EbpfHandler,
 	pid libpf.PID, area jitArea) error {
+	log.Errorf("Ilucky...hotspot.go...addJitArea...")
 	prefixes, err := lpm.CalculatePrefixList(uint64(area.start), uint64(area.end))
 	if err != nil {
 		return fmt.Errorf("LPM prefix calculation error for %x-%x", area.start, area.end)
@@ -1269,6 +1272,7 @@ func (d *hotspotInstance) addJitArea(ebpf interpreter.EbpfHandler,
 // about e.g. stub routines is not yet available.
 func (d *hotspotInstance) populateMainMappings(vmd *hotspotVMData,
 	ebpf interpreter.EbpfHandler, pid libpf.PID) error {
+	log.Errorf("Ilucky...hotspot.go...populateMainMappings...")
 	if d.mainMappingsInserted {
 		// Already populated: nothing to do here.
 		return nil
@@ -1341,6 +1345,7 @@ func (d *hotspotInstance) populateMainMappings(vmd *hotspotVMData,
 // for them in the PID mappings BPF map.
 func (d *hotspotInstance) updateStubMappings(vmd *hotspotVMData,
 	ebpf interpreter.EbpfHandler, pid libpf.PID) {
+	log.Errorf("Ilucky...hotspot.go...updateStubMappings...")
 	for _, stub := range findStubBounds(vmd, d.bias, d.rm) {
 		if _, exists := d.stubs[stub.start]; exists {
 			continue
@@ -1385,6 +1390,7 @@ func (d *hotspotInstance) updateStubMappings(vmd *hotspotVMData,
 
 func (d *hotspotInstance) SynchronizeMappings(ebpf interpreter.EbpfHandler,
 	_ reporter.SymbolReporter, pr process.Process, _ []process.Mapping) error {
+	log.Errorf("Ilucky...hotspot.go...SynchronizeMappings...")
 	vmd, err := d.d.GetOrInit(d.initVMData)
 	if err != nil {
 		return err
@@ -1417,6 +1423,7 @@ func (d *hotspotInstance) SynchronizeMappings(ebpf interpreter.EbpfHandler,
 // queued to be sent to collection agent.
 func (d *hotspotInstance) Symbolize(symbolReporter reporter.SymbolReporter,
 	frame *host.Frame, trace *libpf.Trace) error {
+	log.Errorf("Ilucky...hotspot.go...Symbolize...")
 	if !frame.Type.IsInterpType(libpf.HotSpot) {
 		return interpreter.ErrMismatchInterpreterType
 	}
@@ -1669,6 +1676,7 @@ func forEachItem(prefix string, t reflect.Value, visitor func(reflect.Value, str
 
 // initVMData will fill hotspotVMData introspection data on first use
 func (d *hotspotInstance) initVMData() (hotspotVMData, error) {
+	log.Errorf("Ilucky...hotspot.go...initVMData...")
 	// Initialize the data with non-zero values so it's easy to check that
 	// everything got loaded (some fields will get zero values)
 	vmd := hotspotVMData{}
@@ -1837,9 +1845,9 @@ func (d *hotspotInstance) initVMData() (hotspotVMData, error) {
 // https://github.com/openjdk/jdk/blob/jdk-9%2B181/hotspot/src/share/vm/jvmci/vmStructs_jvmci.cpp#L48
 // https://github.com/openjdk/jdk/blob/jdk-22%2B10/src/hotspot/share/jvmci/vmStructs_jvmci.cpp#L49
 func locateJvmciVMStructs(ef *pfelf.File) (libpf.Address, error) {
-	log.Errorf("Ilucky...hotspot.go...locateJvmciVMStructs...")
-	const maxDataReadSize = 1 * 1024 * 1024   // seen in practice: 192 KiB
-	const maxRodataReadSize = 4 * 1024 * 1024 // seen in practice: 753 KiB
+	log.Errorf("Ilucky...hotspot.go...locateJvmciVMStructs...") // Ilucky...hotspot.go...locateJvmciVMStructs...
+	const maxDataReadSize = 1 * 1024 * 1024                     // seen in practice: 192 KiB
+	const maxRodataReadSize = 4 * 1024 * 1024                   // seen in practice: 753 KiB
 
 	rodataSec := ef.Section(".rodata")
 	if rodataSec == nil {
@@ -1882,16 +1890,15 @@ func locateJvmciVMStructs(ef *pfelf.File) (libpf.Address, error) {
 	return libpf.Address(dataSec.Addr + uint64(offs) - 8), nil
 }
 
-// TODO: Ilucky...core...
+// TODO: Ilucky...core...core...core...
 // Loader is the main function for ProcessManager to recognize and hook the HotSpot
 // libjvm for enabling JVM unwinding and symbolization.
 func Loader(_ interpreter.EbpfHandler, info *interpreter.LoaderInfo) (interpreter.Data, error) {
-	log.Errorf("Ilucky...hotspot.go...Loader...")
+	log.Errorf("Ilucky...hotspot.go...Loader...") // hotspot.go...Loader...
 	if !libjvmRegex.MatchString(info.FileName()) {
 		return nil, nil
 	}
-
-	log.Debugf("HotSpot inspecting %v", info.FileName())
+	log.Debugf("HotSpot inspecting %v", info.FileName()) // HotSpot inspecting /usr/lib/jvm/java-21-openjdk-amd64/lib/server/libjvm.so
 
 	ef, err := info.GetELF()
 	if err != nil {
@@ -1925,7 +1932,7 @@ func Loader(_ interpreter.EbpfHandler, info *interpreter.LoaderInfo) (interprete
 		return nil, err
 	}
 
-	if ptr, err := locateJvmciVMStructs(ef); err == nil {
+	if ptr, err := locateJvmciVMStructs(ef); err == nil { // TODO: Ilucky...core...
 		// Everything except for the base pointer is identical.
 		d.jvmciStructPtrs = d.structPtrs
 		d.jvmciStructPtrs.base = ptr
