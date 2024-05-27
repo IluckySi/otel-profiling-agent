@@ -173,14 +173,14 @@ func mainWithExitCode() exitCode {
 		}
 	}
 
-	log.Error(fmt.Sprintf("Ilucky...main.go...tracer.ProbeBPFSyscall()...")
+	log.Error("Ilucky...main.go...tracer.ProbeBPFSyscall()...")
 	if err = tracer.ProbeBPFSyscall(); err != nil { // TODO: Ilucky...core...
 		msg := fmt.Sprintf("Failed to probe eBPF syscall: %v", err)
 		log.Error(msg)
 		return exitFailure
 	}
 
-	log.Error(fmt.Sprintf("Ilucky...main.go...tracer.ProbeTracepoint()...")
+	log.Error("Ilucky...main.go...tracer.ProbeTracepoint()...")
 	if err = tracer.ProbeTracepoint(); err != nil { // TODO: Ilucky...core...
 		msg := fmt.Sprintf("Failed to probe tracepoint: %v", err)
 		log.Error(msg)
