@@ -201,7 +201,6 @@ func collectIntervalCacheMetrics(ctx context.Context, cache nativeunwind.Interva
 // path.
 func NewTracer(ctx context.Context, rep reporter.SymbolReporter, intervals Intervals,
 	includeTracers []bool, filterErrorFrames bool) (*Tracer, error) {
-	log.Errorf("Ilucky...tracer/tracer.go.NewTracer...")
 	kernelSymbols, err := proc.GetKallsyms("/proc/kallsyms")
 	if err != nil {
 		return nil, fmt.Errorf("failed to read kernel symbols: %v", err)
@@ -268,8 +267,8 @@ func NewTracer(ctx context.Context, rep reporter.SymbolReporter, intervals Inter
 		transmittedFallbackSymbols: transmittedFallbackSymbols,
 		triggerPIDProcessing:       make(chan bool, 1),
 		pidEvents:                  make(chan libpf.PID, pidEventBufferSize),
-		ebpfMaps:                   ebpfMaps,  // TODO: Ilucky...core...
-		ebpfProgs:                  ebpfProgs, // TODO: Ilucky...core...
+		ebpfMaps:                   ebpfMaps,
+		ebpfProgs:                  ebpfProgs,
 		hooks:                      make(map[hookPoint]link.Link),
 		intervals:                  intervals,
 		hasBatchOperations:         hasBatchOperations,
@@ -328,7 +327,6 @@ func buildStackDeltaTemplates(coll *cebpf.CollectionSpec) error {
 // by the embedded elf file and loads these into the kernel.
 func initializeMapsAndPrograms(includeTracers []bool, kernelSymbols *libpf.SymbolMap) (
 	ebpfMaps map[string]*cebpf.Map, ebpfProgs map[string]*cebpf.Program, err error) {
-	log.Errorf("Ilucky...tracer/tracer.go.initializeMapsAndPrograms...")
 	// Loading specifications about eBPF programs and maps from the embedded elf file
 	// does not load them into the kernel.
 	// A collection specification holds the information about eBPF programs and maps.
@@ -443,7 +441,6 @@ func loadAllMaps(coll *cebpf.CollectionSpec, ebpfMaps map[string]*cebpf.Map) err
 	}
 
 	for mapName, mapSpec := range coll.Maps {
-		log.Errorf("Ilucky...tracer/tracer.go.loadAllMaps...mapName=%s", mapName)
 		if newSize, ok := adaption[mapName]; ok {
 			log.Debugf("Size of eBPF map %s: %v", mapName, newSize)
 			mapSpec.MaxEntries = newSize
