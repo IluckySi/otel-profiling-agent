@@ -258,7 +258,7 @@ func mainWithExitCode() exitCode {
 
 	times := config.GetTimes()
 
-	log.Errorf("Ilucky...main.go...parseTracers...argTracers=%s", argTracers)
+	log.Errorf("Ilucky...main.go...parseTracers...argTracers=%s", argTracers) // Ilucky...main.go...parseTracers...argTracers=all
 	log.Debugf("Determining tracers to include")
 	includeTracers, err := parseTracers(argTracers) // TODO: Ilucky...core...
 	if err != nil {
@@ -315,7 +315,7 @@ func mainWithExitCode() exitCode {
 	if err != nil {
 		msg := fmt.Sprintf("Failed to start reporting: %v", err)
 		log.Error(msg)
-		// return exitFailure  // TODO: Ilucky...for debug
+		return exitFailure // TODO: Ilucky...for debug
 	}
 
 	metrics.SetReporter(rep)
@@ -338,6 +338,7 @@ func mainWithExitCode() exitCode {
 	defer reportermetrics.Start(mainCtx, rep, 60*time.Second)()
 
 	// Load the eBPF code and map definitions
+	log.Errorf("Ilucky...main.go...tracer.NewTracer...")
 	trc, err := tracer.NewTracer(mainCtx, rep, times, includeTracers, !argSendErrorFrames) // TODO: Ilucky...core...
 	if err != nil {
 		msg := fmt.Sprintf("Failed to load eBPF tracer: %s", err)
