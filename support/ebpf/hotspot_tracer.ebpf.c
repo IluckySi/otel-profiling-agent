@@ -208,7 +208,7 @@ __attribute__((always_inline)) inline static
 ErrorCode hotspot_handle_interpreter(UnwindState *state,Trace *trace,
                                      HotspotUnwindInfo *ui, HotspotProcInfo *ji,
                                      HotspotUnwindAction *action) {
-  ERROR_PRINT("Ilucky...hotspot_tracer.ebpf.c...hotspot_handle_interpreter...");
+  DEBUG_PRINT("Ilucky...hotspot_tracer.ebpf.c...hotspot_handle_interpreter...");
   // Hotspot Interpreter has it's custom stack layout, and the unwinding is done based
   // on frame pointer. No frame information is in the CodeBlob header.
   // The Interpreter internal offsets seem relatively stable, but would need to be programmed
