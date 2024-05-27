@@ -547,6 +547,11 @@ func (pm *ProcessManager) SynchronizeProcess(pr process.Process) {
 	pid := pr.PID()
 	log.Debugf("= PID: %v", pid)
 
+	// TODO: Ilucky...DEBUG...
+	if pid != 677596 {
+		return
+	}
+
 	pm.mappingStats.numProcAttempts.Add(1)
 	start := time.Now()
 	mappings, err := pr.GetMappings()

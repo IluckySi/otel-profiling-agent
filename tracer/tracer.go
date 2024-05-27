@@ -1023,12 +1023,12 @@ func (t *Tracer) StartMapMonitors(ctx context.Context, traceOutChan chan *host.T
 // entry point is always the native tracer. The native tracer will determine when to invoke the
 // interpreter tracers based on address range information.
 func (t *Tracer) AttachTracer(sampleFreq int) error {
-	log.Errorf("Ilucky...tracer.go.AttachTracer...")
-	tracerProg, ok := t.ebpfProgs["native_tracer_entry"] // TODO: native_tracer_entry EBPF程序主要用于实现内核级的跟踪和监控功能。通过native_tracer_entry程序，用户可以实时捕获系统调用、网络流量、文件操作等信息，从而帮助用户进行系统性能调优、故障排查等工作
+	log.Errorf("Ilucky...tracer.go.AttachTracer...")     // Ilucky...tracer.go.AttachTracer...
+	tracerProg, ok := t.ebpfProgs["native_tracer_entry"] // TODO: Ilucky...native_tracer_entry EBPF程序主要用于实现内核级的跟踪和监控功能。通过native_tracer_entry程序，用户可以实时捕获系统调用、网络流量、文件操作等信息，从而帮助用户进行系统性能调优、故障排查等工作
 	if !ok {
 		return fmt.Errorf("entry program is not available")
 	}
-	log.Errorf("Ilucky...tracer.go.AttachTracer...tracerProg.FD()=%d", tracerProg.FD())
+	log.Errorf("Ilucky...tracer.go.AttachTracer...tracerProg.FD()=%d", tracerProg.FD()) // Ilucky...tracer.go.AttachTracer...tracerProg.FD()=53
 
 	perfAttribute := new(perf.Attr)
 	perfAttribute.SetSampleFreq(uint64(sampleFreq))
@@ -1044,7 +1044,7 @@ func (t *Tracer) AttachTracer(sampleFreq int) error {
 	events := t.perfEntrypoints.WLock()
 	defer t.perfEntrypoints.WUnlock(&events)
 	for _, id := range onlineCPUIDs {
-		log.Errorf("Ilucky...tracer.go.AttachTracer...onlineCPUIDs.id=%d", id)
+		log.Errorf("Ilucky...tracer.go.AttachTracer...onlineCPUIDs.id=%d", id) // Ilucky...tracer.go.AttachTracer...onlineCPUIDs.id=7
 		perfEvent, err := perf.Open(perfAttribute, perf.AllThreads, id, nil)
 		if err != nil {
 			return fmt.Errorf("failed to attach to perf event on CPU %d: %v", id, err)
