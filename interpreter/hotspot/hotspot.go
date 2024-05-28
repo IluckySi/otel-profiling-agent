@@ -111,7 +111,6 @@ import (
 	"fmt"
 	"hash/fnv"
 	"io"
-	"path"
 	"reflect"
 	"regexp"
 	"runtime"
