@@ -289,6 +289,7 @@ func (pm *ProcessManager) ConvertTrace(trace *host.Trace) (newTrace *libpf.Trace
 		}
 	}
 	newTrace.Hash = traceutil.HashTrace(newTrace)
+	log.Error("Ilucky...manager.go...ConvertTrace...newTrace=%v", newTrace)
 	return newTrace
 }
 

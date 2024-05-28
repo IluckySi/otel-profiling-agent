@@ -430,6 +430,30 @@ func (pm *ProcessManager) synchronizeMappings(pr process.Process,
 	interpretersValid := make(libpf.Set[libpf.OnDiskFileIdentifier])
 	for idx := range mappings {
 		m := &mappings[idx]
+		//time="2024-05-28T09:31:58.546175578Z" level=error msg=Ilucky...processinfo.go...synchronizeMappings...
+		//time="2024-05-28T09:31:58.546251789Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/jvm/java-21-openjdk-amd64/bin/java"
+		//time="2024-05-28T09:31:58.546281462Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/jvm/java-21-openjdk-amd64/lib/libjsvml.so"
+		//time="2024-05-28T09:31:58.546351198Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path="
+		//time="2024-05-28T09:31:58.546373742Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path="
+		//time="2024-05-28T09:31:58.546392924Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path="
+		//time="2024-05-28T09:31:58.546411267Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.32"
+		//time="2024-05-28T09:31:58.546427890Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/jvm/java-21-openjdk-amd64/lib/libmanagement_ext.so"
+		//time="2024-05-28T09:31:58.546451098Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/jvm/java-21-openjdk-amd64/lib/libmanagement.so"
+		//time="2024-05-28T09:31:58.546475278Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/jvm/java-21-openjdk-amd64/lib/libzip.so"
+		//time="2024-05-28T09:31:58.546490924Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/jvm/java-21-openjdk-amd64/lib/libnet.so"
+		//time="2024-05-28T09:31:58.546512896Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/jvm/java-21-openjdk-amd64/lib/libnio.so"
+		//time="2024-05-28T09:31:58.546534776Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/x86_64-linux-gnu/libm.so.6"
+		//time="2024-05-28T09:31:58.546574527Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/jvm/java-21-openjdk-amd64/lib/server/libjvm.so"
+		//time="2024-05-28T09:31:58.546597616Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/jvm/java-21-openjdk-amd64/lib/libextnet.so"
+		//time="2024-05-28T09:31:58.546620004Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/x86_64-linux-gnu/libc.so.6"
+		//time="2024-05-28T09:31:58.546640947Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/jvm/java-21-openjdk-amd64/lib/libjava.so"
+		//time="2024-05-28T09:31:58.546667690Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/x86_64-linux-gnu/libgcc_s.so.1"
+		//time="2024-05-28T09:31:58.546684441Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/jvm/java-21-openjdk-amd64/lib/libjli.so"
+		//time="2024-05-28T09:31:58.546699761Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/x86_64-linux-gnu/libz.so.1.2.13"
+		//time="2024-05-28T09:31:58.546802748Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/jvm/java-21-openjdk-amd64/lib/libjimage.so"
+		//time="2024-05-28T09:31:58.546819818Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2"
+		//time="2024-05-28T09:31:58.546845215Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=linux-vdso.1.so"
+		//time="2024-05-28T09:31:58.546910698Z" level=error msg="Ilucky...processinfo.go...synchronizeMappings...range mpAdd...mapping.Path=linux-vdso.1.so"
 		log.Errorf("Ilucky...processinfo.go...synchronizeMappings...range mappings...mapping.Path=%s", m.Path)
 		if !m.IsExecutable() || m.IsAnonymous() {
 			continue
