@@ -471,7 +471,7 @@ func (pm *ProcessManager) synchronizeMappings(pr process.Process,
 		log.Errorf("Ilucky...processinfo.go...synchronizeMappings...range mpAdd...mapping.Path=%s", mapping.Path)
 		// Output memory usage in debug builds.
 		memorydebug.DebugLogMemoryUsage()
-		pm.processNewExecMapping(pr, mapping) // Ilucky...
+		pm.processNewExecMapping(pr, mapping) // Ilucky...core...
 	}
 
 	// Update interpreter plugins about the changed mappings
@@ -479,7 +479,7 @@ func (pm *ProcessManager) synchronizeMappings(pr process.Process,
 		pm.mu.Lock()
 		for _, instance := range pm.interpreters[pid] {
 			log.Errorf("Ilucky...processinfo.go...synchronizeMappings...instance=%v", instance)
-			err := instance.SynchronizeMappings(pm.ebpf, pm.reporter, pr, mappings) // Ilucky...
+			err := instance.SynchronizeMappings(pm.ebpf, pm.reporter, pr, mappings) // Ilucky...core...
 			if err != nil {
 				if alive, _ := proc.IsPIDLive(pid); alive {
 					log.Errorf("Failed to handle new anonymous mapping for PID %d: %v", pid, err)

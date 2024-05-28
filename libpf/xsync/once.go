@@ -47,7 +47,7 @@ func (l *Once[T]) initSlow(init func() (T, error)) (*T, error) {
 	}
 
 	var err error
-	l.data, err = init()
+	l.data, err = init() // Ilucky...core....执行initVMData方法
 	if err != nil {
 		return nil, err
 	}

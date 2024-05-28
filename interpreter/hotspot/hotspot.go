@@ -111,6 +111,7 @@ import (
 	"fmt"
 	"hash/fnv"
 	"io"
+	"path"
 	"reflect"
 	"regexp"
 	"runtime"
@@ -362,7 +363,7 @@ func (it *hotspotIntrospectionTable) resolveSymbols(ef *pfelf.File, symNames []s
 			continue
 		}
 		addr, err := ef.LookupSymbolAddress(libpf.SymbolName(s))
-		log.Error("Ilucky...hotspot.go...resolveSymols...symName=%s, addr=%s", i, addr)
+		log.Errorf("Ilucky...hotspot.go...i=%d, resolveSymols...symName=%s, addr=%d", i, s, addr)
 		if err != nil {
 			return fmt.Errorf("symbol '%v' not found: %w", s, err)
 		}
@@ -402,7 +403,7 @@ type hotspotVMData struct {
 	// C++ class  and thus the expected value of .Sizeof member. This is mainly to
 	// indicate the classes for which uint8 is not enough to hold the offset values
 	// for the eBPF code.
-	vmStructs struct {
+	vmStructs struct { // TODO: Ilucky...core...vmStructs reflects the HotSpot introspection data we want to extract from the runtime.
 		AbstractVMVersion struct {
 			Release     libpf.Address `name:"_s_vm_release"`
 			BuildNumber libpf.Address `name:"_vm_build_number"`
@@ -1391,7 +1392,7 @@ func (d *hotspotInstance) updateStubMappings(vmd *hotspotVMData,
 func (d *hotspotInstance) SynchronizeMappings(ebpf interpreter.EbpfHandler,
 	_ reporter.SymbolReporter, pr process.Process, _ []process.Mapping) error {
 	log.Errorf("Ilucky...hotspot.go...SynchronizeMappings...") // Ilucky...hotspot.go...SynchronizeMappings...
-	vmd, err := d.d.GetOrInit(d.initVMData)                    // TODO: Ilucky...
+	vmd, err := d.d.GetOrInit(d.initVMData)                    // TODO: Ilucky...d.initVMData...
 	if err != nil {
 		return err
 	}
@@ -1674,14 +1675,16 @@ func forEachItem(prefix string, t reflect.Value, visitor func(reflect.Value, str
 	return nil
 }
 
+// TODO: Ilucky...初始化VM数据...
 // initVMData will fill hotspotVMData introspection data on first use
 func (d *hotspotInstance) initVMData() (hotspotVMData, error) {
 	log.Errorf("Ilucky...hotspot.go...initVMData...") // Ilucky...hotspot.go...initVMData...
 	// Initialize the data with non-zero values so it's easy to check that
 	// everything got loaded (some fields will get zero values)
-	vmd := hotspotVMData{}
+	vmd := hotspotVMData{} // TODO...core...
 	rm := d.rm
 	bias := d.bias
+	log.Errorf("Ilucky...hotspot.go...initVMData...rm=%v, bias=%d", rm, bias)
 	_ = forEachItem("", reflect.ValueOf(&vmd.vmStructs).Elem(),
 		func(item reflect.Value, name string) error {
 			item.SetUint(^uint64(0))
@@ -1711,6 +1714,7 @@ func (d *hotspotInstance) initVMData() (hotspotVMData, error) {
 	build := rm.Uint32(vms.AbstractVMVersion.BuildNumber + bias)
 	vmd.version = major<<24 + minor<<16 + patch<<8 + build
 	vmd.versionStr = rm.StringPtr(vms.AbstractVMVersion.Release + bias)
+	log.Errorf("Ilucky...hotspot.go...initVMData...jdkVersion=%d, major-minor-patch=%d-%d-%d,build=%d,vmd.versionStr=%s", jdkVersion, major, minor, patch, build, vmd.versionStr)
 
 	// Check minimum supported version. JDK 7-20 supported. Assume newer JDK
 	// works if the needed symbols are found.
@@ -1837,6 +1841,8 @@ func (d *hotspotInstance) initVMData() (hotspotVMData, error) {
 	return vmd, nil
 }
 
+// TODO: Ilucky...JVMCI VM structs? Klass_vtable_start_offset?
+// VM structs 是一种用于表示虚拟机（VM）的数据结构。它们包含了虚拟机的各种属性和数据，例如内存分配情况、寄存器状态、指令集等
 // locateJvmciVMStructs attempts to heuristically locate the JVMCI VM structs by
 // searching for references to the string `Klass_vtable_start_offset`. In all JVM
 // versions >= 9.0, this corresponds to the first entry in the VM structs:
@@ -1865,6 +1871,7 @@ func locateJvmciVMStructs(ef *pfelf.File) (libpf.Address, error) {
 	}
 
 	ptr := rodataSec.Addr + uint64(offs)
+	log.Errorf("Ilucky...hotspot.go...locateJvmciVMStructs...rodataSec.Addr=%d, offs=%d", rodataSec.Addr, uint64(offs))
 	ptrEncoded := make([]byte, 8)
 	binary.LittleEndian.PutUint64(ptrEncoded, ptr)
 
@@ -1874,6 +1881,7 @@ func locateJvmciVMStructs(ef *pfelf.File) (libpf.Address, error) {
 	}
 
 	data, err := dataSec.Data(maxDataReadSize)
+	log.Errorf("Ilucky...hotspot.go...locateJvmciVMStructs...dataSec.Data(maxDataReadSize)=%s", data)
 	if err != nil {
 		return 0, err
 	}
@@ -1890,11 +1898,11 @@ func locateJvmciVMStructs(ef *pfelf.File) (libpf.Address, error) {
 	return libpf.Address(dataSec.Addr + uint64(offs) - 8), nil
 }
 
-// TODO: Ilucky...core...core...core...
+// TODO: Ilucky...core...什么是JVM unwinding and symbolization?
 // Loader is the main function for ProcessManager to recognize and hook the HotSpot
 // libjvm for enabling JVM unwinding and symbolization.
 func Loader(_ interpreter.EbpfHandler, info *interpreter.LoaderInfo) (interpreter.Data, error) {
-	log.Errorf("Ilucky...hotspot.go...Loader...") // hotspot.go...Loader...
+	log.Errorf("Ilucky...hotspot.go...Loader...") // Ilucky...hotspot.go...Loader...
 	if !libjvmRegex.MatchString(info.FileName()) {
 		return nil, nil
 	}
@@ -1904,11 +1912,12 @@ func Loader(_ interpreter.EbpfHandler, info *interpreter.LoaderInfo) (interprete
 	if err != nil {
 		return nil, err
 	}
+	log.Errorf("Ilucky...hotspot.go...Loader...fileID=%d, fileName=%v, info.GetELF()=%v, info.Gaps()=%v", info.FileID(), info.FileName(), ef, info.Gaps()) // HotSpot inspecting /usr/lib/jvm/java-21-openjdk-amd64/lib/server/libjvm.so
 
 	d := &hotspotData{}
 	err = d.structPtrs.resolveSymbols(ef,
 		[]string{
-			"gHotSpotVMStructs",
+			"gHotSpotVMStructs", // Ilucky...gHotSpotVMStructs用于获取HotSpot虚拟机的结构信息，
 			"gHotSpotVMStructEntryArrayStride",
 			"gHotSpotVMStructEntryTypeNameOffset",
 			"gHotSpotVMStructEntryFieldNameOffset",
@@ -1932,7 +1941,7 @@ func Loader(_ interpreter.EbpfHandler, info *interpreter.LoaderInfo) (interprete
 		return nil, err
 	}
 
-	if ptr, err := locateJvmciVMStructs(ef); err == nil { // TODO: Ilucky...
+	if ptr, err := locateJvmciVMStructs(ef); err == nil { // TODO: Ilucky...core...
 		// Everything except for the base pointer is identical.
 		d.jvmciStructPtrs = d.structPtrs
 		d.jvmciStructPtrs.base = ptr

@@ -303,8 +303,8 @@ func (state *executableInfoManagerState) detectAndLoadInterpData(
 	log.Errorf("Ilucky...mananger.go...detectAndLoadInterpData...") // Ilucky...mananger.go...detectAndLoadInterpData...
 	// Ask all interpreter loaders whether they want to handle this executable.
 	for _, loader := range state.interpreterLoaders {
-		log.Errorf("Ilucky...mananger.go...detectAndLoadInterpData..._loader=%v", runtime.FuncForPC(reflect.ValueOf(loader).Pointer()).Name()) // Ilucky...mananger.go...detectAndLoadInterpData..._loader=0xc8a180
-		data, err := loader(state.ebpf, loaderInfo)
+		log.Errorf("Ilucky...mananger.go...detectAndLoadInterpData..._loader=%v", runtime.FuncForPC(reflect.ValueOf(loader).Pointer()).Name()) // "Ilucky...mananger.go...detectAndLoadInterpData..._loader=github.com/elastic/otel-profiling-agent/interpreter/hotspot.Loader
+		data, err := loader(state.ebpf, loaderInfo)                                                                                            // TODO: Ilucky...core...
 		if err != nil {
 			if errors.Is(err, os.ErrNotExist) {
 				// Very common if the process exited when we tried to analyze it.
