@@ -120,7 +120,7 @@ bpf_map_def SEC("maps") trace_events = {
 
 SEC("perf_event/unwind_stop")
 int unwind_stop(struct pt_regs *ctx) {
-  printf("******************************************\n"）
+  printt("******************************************\n");
   PerCPURecord *record = get_per_cpu_record();
   if (!record)
     return -1;
