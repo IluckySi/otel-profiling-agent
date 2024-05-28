@@ -13,6 +13,7 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"reflect"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -447,8 +448,13 @@ func loadAllMaps(coll *cebpf.CollectionSpec, ebpfMaps map[string]*cebpf.Map) err
 	}
 
 	for mapName, mapSpec := range coll.Maps {
-		log.Errorf("Ilucky...tracer.go.loadAllMaps...mapName=%s,mapSpec=%v", mapName, mapSpec) // Ilucky...tracer.go.loadAllMaps...mapName=v8_procs,mapSpec=Hash(keySize=4, valueSize=28, maxEntries=1024, flags=0)
-
+		log.Errorf("Ilucky...tracer.go.loadAllMaps...mapName=%s", mapName) // Ilucky...tracer.go.loadAllMaps...mapName=v8_procs,mapSpec=Hash(keySize=4, valueSize=28, maxEntries=1024, flags=0)
+		// 获取结构体类型信息
+		t := reflect.TypeOf(mapSpec)
+		for i := 0; i < t.NumField(); i++ {
+			field := t.Field(i)
+			log.Errorf("Ilucky...tracer.go.loadAllMaps...mapName=%s, mapValue=%s", field.Name, field.Type)
+		}
 		if newSize, ok := adaption[mapName]; ok {
 			log.Debugf("Size of eBPF map %s: %v", mapName, newSize)
 			mapSpec.MaxEntries = newSize
