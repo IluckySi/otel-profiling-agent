@@ -132,6 +132,7 @@ func newTraceHandler(ctx context.Context, rep reporter.TraceReporter,
 }
 
 func (m *traceHandler) HandleTrace(bpfTrace *host.Trace) {
+	log.Errorf("Ilucky...traceHandler.go...HandleTrace...bpfTrace=%v", bpfTrace)
 	timestamp := libpf.UnixTime32(libpf.NowAsUInt32())
 	defer m.traceProcessor.SymbolizationComplete(bpfTrace.KTime)
 
@@ -152,6 +153,7 @@ func (m *traceHandler) HandleTrace(bpfTrace *host.Trace) {
 
 	// Slow path: convert trace.
 	umTrace := m.traceProcessor.ConvertTrace(bpfTrace)
+	log.Errorf("Ilucky...traceHandler.go...HandleTrace...umTrace=%v", umTrace)
 	log.Debugf("Trace hash remap 0x%x -> 0x%x", bpfTrace.Hash, umTrace.Hash)
 	m.bpfTraceCache.Add(bpfTrace.Hash, umTrace.Hash)
 	m.reporter.ReportCountForTrace(umTrace.Hash, timestamp, 1,

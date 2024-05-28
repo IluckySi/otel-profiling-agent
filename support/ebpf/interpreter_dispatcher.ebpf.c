@@ -120,6 +120,7 @@ bpf_map_def SEC("maps") trace_events = {
 
 SEC("perf_event/unwind_stop")
 int unwind_stop(struct pt_regs *ctx) {
+  printf("******************************************\n"）
   PerCPURecord *record = get_per_cpu_record();
   if (!record)
     return -1;
@@ -193,6 +194,7 @@ u32 _version SEC("version") = 0xFFFFFFFE;
 // at /sys/kernel/debug/tracing/events/syscalls/sys_enter_read/format.
 SEC("tracepoint/syscalls/sys_enter_read")
 int tracepoint__sys_enter_read(void *ctx) {
+  printf("******************************************\n"）
   printt("The read tracepoint was triggered");
   return 0;
 }

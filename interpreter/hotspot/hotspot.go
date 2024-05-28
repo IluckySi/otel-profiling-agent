@@ -1249,7 +1249,7 @@ func (d *hotspotInstance) addJitArea(ebpf interpreter.EbpfHandler,
 			continue
 		}
 
-		if err = ebpf.UpdatePidInterpreterMapping(pid, prefix,
+		if err = ebpf.UpdatePidInterpreterMapping(pid, prefix, // TODO: Ilucky...core...
 			support.ProgUnwindHotspot, host.FileID(area.tsid),
 			uint64(area.codeStart)); err != nil {
 			return fmt.Errorf(
@@ -1620,11 +1620,11 @@ func (vmd *hotspotVMData) parseIntrospection(it *hotspotIntrospectionTable,
 			// We just resolved a const pointer. Adjust it by loadBias
 			// to get a globally cacheable unrelocated virtual address.
 			value -= uint64(loadBias)
-			log.Debugf("JVM %v.%v = @ %x", typeName, fieldName, value)
+			log.Debugf("JVM %v.%v = @ %x", typeName, fieldName, value) // JVM CodeCache._low_bound = @ 14d90b8
 		} else {
 			// Literal value
 			value = npsr.Uint64(e, valOffs)
-			log.Debugf("JVM %v.%v = %v", typeName, fieldName, value)
+			log.Debugf("JVM %v.%v = %v", typeName, fieldName, value) // JVM Klass.Sizeof = 184
 		}
 
 		switch f.Kind() {
@@ -1683,7 +1683,7 @@ func (d *hotspotInstance) initVMData() (hotspotVMData, error) {
 	vmd := hotspotVMData{} // TODO...core...
 	rm := d.rm
 	bias := d.bias
-	log.Errorf("Ilucky...hotspot.go...initVMData...rm=%v, bias=%d", rm, bias)
+	log.Errorf("Ilucky...hotspot.go...initVMData...rm=%v, bias=%d", rm.to, bias) // Ilucky...hotspot.go...initVMData...rm={{677596} 0}, bias=127240033533952
 	_ = forEachItem("", reflect.ValueOf(&vmd.vmStructs).Elem(),
 		func(item reflect.Value, name string) error {
 			item.SetUint(^uint64(0))
@@ -1713,7 +1713,7 @@ func (d *hotspotInstance) initVMData() (hotspotVMData, error) {
 	build := rm.Uint32(vms.AbstractVMVersion.BuildNumber + bias)
 	vmd.version = major<<24 + minor<<16 + patch<<8 + build
 	vmd.versionStr = rm.StringPtr(vms.AbstractVMVersion.Release + bias)
-	log.Errorf("Ilucky...hotspot.go...initVMData...jdkVersion=%d, major-minor-patch=%d-%d-%d,build=%d,vmd.versionStr=%s", jdkVersion, major, minor, patch, build, vmd.versionStr)
+	log.Errorf("Ilucky...hotspot.go...initVMData...jdkVersion=%d, major-minor-patch=%d-%d-%d,build=%d,vmd.versionStr=%s", jdkVersion, major, minor, patch, build, vmd.versionStr) // Ilucky...hotspot.go...initVMData...jdkVersion=131093, major-minor-patch=21-0-2,build=13,vmd.versionStr=21.0.2+13-Ubuntu-123.10.1
 
 	// Check minimum supported version. JDK 7-20 supported. Assume newer JDK
 	// works if the needed symbols are found.
@@ -1880,7 +1880,7 @@ func locateJvmciVMStructs(ef *pfelf.File) (libpf.Address, error) {
 	}
 
 	data, err := dataSec.Data(maxDataReadSize)
-	log.Errorf("Ilucky...hotspot.go...locateJvmciVMStructs...dataSec.Data(maxDataReadSize)=%s", data)
+	// log.Errorf("Ilucky...hotspot.go...locateJvmciVMStructs...dataSec.Data(maxDataReadSize)=%s", data)
 	if err != nil {
 		return 0, err
 	}
