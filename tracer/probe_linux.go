@@ -48,7 +48,7 @@ func getTracepointID(tracepoint string) (uint64, error) {
 // from the utsname struct.
 func GetCurrentKernelVersion() (major, minor, patch uint32, err error) {
 	var uname unix.Utsname
-	if err := unix.Uname(&uname); err != nil {
+	if err := unix.Uname(&uname); err != nil { // Ilucky...uname -r -> 6.5.0-28-generic
 		return 0, 0, 0, fmt.Errorf("could not get Kernel Version: %v", err)
 	}
 	fmt.Fscanf(bytes.NewReader(uname.Release[:]), "%d.%d.%d", &major, &minor, &patch)
@@ -61,7 +61,7 @@ func ProbeTracepoint() error {
 	log.Error("Ilucky...probe_linux.go.ProbeTracepoint()...")
 	ins := asm.Instructions{
 		// set exit code to 0
-		asm.Mov.Imm(asm.R0, 0),
+		asm.Mov.Imm(asm.R0, 0), // Ilucky...将值0放到寄存器0中...
 		asm.Return(),
 	}
 
@@ -79,7 +79,7 @@ func ProbeTracepoint() error {
 	}
 	defer restoreRlimit()
 
-	prog, err := cebpf.NewProgram(&cebpf.ProgramSpec{
+	prog, err := cebpf.NewProgram(&cebpf.ProgramSpec{ // TODO: 通过cilium创建一个EBPF程序...
 		Type:          cebpf.TracePoint,
 		License:       "GPL",
 		Instructions:  ins,
@@ -98,7 +98,7 @@ func ProbeTracepoint() error {
 	}
 
 	attr := unix.PerfEventAttr{
-		Type:        unix.PERF_TYPE_TRACEPOINT,
+		Type:        unix.PERF_TYPE_TRACEPOINT, // TODO: tracepoint类型的perfEvent？
 		Config:      tid,
 		Sample_type: unix.PERF_SAMPLE_RAW,
 		Sample:      1,

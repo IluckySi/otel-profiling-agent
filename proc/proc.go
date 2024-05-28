@@ -41,6 +41,7 @@ func GetKallsyms(kallsymsPath string) (*libpf.SymbolMap, error) {
 	defer file.Close()
 
 	var scanner = bufio.NewScanner(file)
+	var c int
 	for scanner.Scan() {
 		// Avoid heap allocation by not using scanner.Text().
 		// NOTE: The underlying bytes will change with the next call to scanner.Scan(),
@@ -69,6 +70,12 @@ func GetKallsyms(kallsymsPath string) (*libpf.SymbolMap, error) {
 			Name:    libpf.SymbolName(symbol),
 			Address: libpf.SymbolValue(address),
 		})
+
+		// Ilucky...debug
+		c++
+		if c < 5 {
+			log.Errorf("Ilucky...proc.go.GetKallsyms...symbol=%s, address=%d", libpf.SymbolName(symbol), libpf.SymbolValue(address))
+		}
 	}
 	symmap.Finalize()
 

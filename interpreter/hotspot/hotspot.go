@@ -1391,7 +1391,7 @@ func (d *hotspotInstance) updateStubMappings(vmd *hotspotVMData,
 func (d *hotspotInstance) SynchronizeMappings(ebpf interpreter.EbpfHandler,
 	_ reporter.SymbolReporter, pr process.Process, _ []process.Mapping) error {
 	log.Errorf("Ilucky...hotspot.go...SynchronizeMappings...")
-	vmd, err := d.d.GetOrInit(d.initVMData)
+	vmd, err := d.d.GetOrInit(d.initVMData) // TODO: Ilucky...core...
 	if err != nil {
 		return err
 	}

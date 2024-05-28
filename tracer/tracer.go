@@ -329,16 +329,19 @@ func buildStackDeltaTemplates(coll *cebpf.CollectionSpec) error {
 // by the embedded elf file and loads these into the kernel.
 func initializeMapsAndPrograms(includeTracers []bool, kernelSymbols *libpf.SymbolMap) (
 	ebpfMaps map[string]*cebpf.Map, ebpfProgs map[string]*cebpf.Program, err error) {
-	log.Errorf("Ilucky...tracer/tracer.go.initializeMapsAndPrograms...")
+	log.Errorf("Ilucky...tracer.go.initializeMapsAndPrograms...")
 	// Loading specifications about eBPF programs and maps from the embedded elf file
 	// does not load them into the kernel.
 	// A collection specification holds the information about eBPF programs and maps.
 	// References to eBPF maps in the eBPF programs are just placeholders that need to be
 	// replaced by the actual loaded maps later on with RewriteMaps before loading the
 	// programs into the kernel.
-	coll, err := support.LoadCollectionSpec()
+	coll, err := support.LoadCollectionSpec() // TODO: Ilucky...core...load ebpf file（根据操作系统）...
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to load specification for tracers: %v", err)
+	}
+	for k, v := range coll.Maps {
+		log.Errorf("Ilucky...tracer.go.initializeMapsAndPrograms...coll...k=%s, name=%s, v=%v", k, v.Name, v)
 	}
 
 	err = buildStackDeltaTemplates(coll)
@@ -444,7 +447,7 @@ func loadAllMaps(coll *cebpf.CollectionSpec, ebpfMaps map[string]*cebpf.Map) err
 	}
 
 	for mapName, mapSpec := range coll.Maps {
-		log.Errorf("Ilucky...tracer.go.loadAllMaps...mapName=%s,mapSpec=%s", mapName, mapSpec) // Ilucky...tracer.go.loadAllMaps...mapName=v8_procs,mapSpec=Hash(keySize=4, valueSize=28, maxEntries=1024, flags=0)
+		log.Errorf("Ilucky...tracer.go.loadAllMaps...mapName=%s,mapSpec=%v", mapName, mapSpec) // Ilucky...tracer.go.loadAllMaps...mapName=v8_procs,mapSpec=Hash(keySize=4, valueSize=28, maxEntries=1024, flags=0)
 
 		if newSize, ok := adaption[mapName]; ok {
 			log.Debugf("Size of eBPF map %s: %v", mapName, newSize)
