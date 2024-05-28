@@ -194,7 +194,7 @@ u32 _version SEC("version") = 0xFFFFFFFE;
 // at /sys/kernel/debug/tracing/events/syscalls/sys_enter_read/format.
 SEC("tracepoint/syscalls/sys_enter_read")
 int tracepoint__sys_enter_read(void *ctx) {
-  printf("******************************************\n");
+  printt("******************************************\n");
   printt("The read tracepoint was triggered");
   return 0;
 }
