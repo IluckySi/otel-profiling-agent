@@ -1683,7 +1683,7 @@ func (d *hotspotInstance) initVMData() (hotspotVMData, error) {
 	vmd := hotspotVMData{} // TODO...core...
 	rm := d.rm
 	bias := d.bias
-	log.Errorf("Ilucky...hotspot.go...initVMData...rm=%v, bias=%d", rm.to, bias) // Ilucky...hotspot.go...initVMData...rm={{677596} 0}, bias=127240033533952
+	// log.Errorf("Ilucky...hotspot.go...initVMData...rm=%v, bias=%d", rm.to, bias) // Ilucky...hotspot.go...initVMData...rm={{677596} 0}, bias=127240033533952
 	_ = forEachItem("", reflect.ValueOf(&vmd.vmStructs).Elem(),
 		func(item reflect.Value, name string) error {
 			item.SetUint(^uint64(0))
