@@ -303,48 +303,48 @@ func StartOTLP(mainCtx context.Context, c *Config) (Reporter, error) {
 	}
 
 	// TODO: Ilucky...debug...
-	//// Create a child context for reporting features
-	//ctx, cancelReporting := context.WithCancel(mainCtx)
-	//
-	//// Establish the gRPC connection before going on, waiting for a response
-	//// from the collectionAgent endpoint.
-	//// Use grpc.WithBlock() in setupGrpcConnection() for this to work.
-	//otlpGrpcConn, err := waitGrpcEndpoint(ctx, c, r.rpcStats)
-	//if err != nil {
-	//	cancelReporting()
-	//	close(r.stopSignal)
-	//	return nil, err
-	//}
-	//r.client = otlpcollector.NewProfilesServiceClient(otlpGrpcConn)
-	//
-	//go func() {
-	//	tick := time.NewTicker(c.Times.ReportInterval())
-	//	defer tick.Stop()
-	//	for {
-	//		select {
-	//		case <-ctx.Done():
-	//			return
-	//		case <-r.stopSignal:
-	//			return
-	//		case <-tick.C:
-	//			if err := r.reportOTLPProfile(ctx); err != nil {
-	//				log.Errorf("Request failed: %v", err)
-	//			}
-	//			tick.Reset(libpf.AddJitter(c.Times.ReportInterval(), 0.2))
-	//		}
-	//	}
-	//}()
-	//
-	//// When Stop() is called and a signal to 'stop' is received, then:
-	//// - cancel the reporting functions currently running (using context)
-	//// - close the gRPC connection with collection-agent
-	//go func() {
-	//	<-r.stopSignal
-	//	cancelReporting()
-	//	if err := otlpGrpcConn.Close(); err != nil {
-	//		log.Fatalf("Stopping connection of OTLP client client failed: %v", err)
-	//	}
-	//}()
+	// Create a child context for reporting features
+	ctx, cancelReporting := context.WithCancel(mainCtx)
+
+	// Establish the gRPC connection before going on, waiting for a response
+	// from the collectionAgent endpoint.
+	// Use grpc.WithBlock() in setupGrpcConnection() for this to work.
+	otlpGrpcConn, err := waitGrpcEndpoint(ctx, c, r.rpcStats)
+	if err != nil {
+		cancelReporting()
+		close(r.stopSignal)
+		return nil, err
+	}
+	r.client = otlpcollector.NewProfilesServiceClient(otlpGrpcConn)
+
+	go func() {
+		tick := time.NewTicker(c.Times.ReportInterval())
+		defer tick.Stop()
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-r.stopSignal:
+				return
+			case <-tick.C:
+				if err := r.reportOTLPProfile(ctx); err != nil {
+					log.Errorf("Request failed: %v", err)
+				}
+				tick.Reset(libpf.AddJitter(c.Times.ReportInterval(), 0.2))
+			}
+		}
+	}()
+
+	// When Stop() is called and a signal to 'stop' is received, then:
+	// - cancel the reporting functions currently running (using context)
+	// - close the gRPC connection with collection-agent
+	go func() {
+		<-r.stopSignal
+		cancelReporting()
+		if err := otlpGrpcConn.Close(); err != nil {
+			log.Fatalf("Stopping connection of OTLP client client failed: %v", err)
+		}
+	}()
 
 	return r, nil
 }

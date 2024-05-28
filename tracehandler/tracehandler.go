@@ -152,6 +152,7 @@ func (m *traceHandler) HandleTrace(bpfTrace *host.Trace) {
 	m.bpfTraceCacheMiss++
 
 	// Slow path: convert trace.
+	log.Errorf("Ilucky...traceHandler.go...HandleTrace...ConvertTrace=%v", bpfTrace)
 	umTrace := m.traceProcessor.ConvertTrace(bpfTrace)
 	log.Errorf("Ilucky...traceHandler.go...HandleTrace...umTrace=%v", umTrace)
 	log.Debugf("Trace hash remap 0x%x -> 0x%x", bpfTrace.Hash, umTrace.Hash)
