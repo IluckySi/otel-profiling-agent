@@ -258,9 +258,9 @@ func mainWithExitCode() exitCode {
 
 	times := config.GetTimes()
 
-	log.Errorf("Ilucky...main.go...parseTracers...argTracers=%s", argTracers) // Ilucky...main.go...parseTracers...argTracers=all
+	// log.Errorf("Ilucky...main.go...parseTracers...argTracers=%s", argTracers) // Ilucky...main.go...parseTracers...argTracers=all
 	log.Debugf("Determining tracers to include")
-	includeTracers, err := parseTracers(argTracers) // TODO: Ilucky....
+	includeTracers, err := parseTracers(argTracers)
 	if err != nil {
 		msg := fmt.Sprintf("Failed to parse the included tracers: %s", err)
 		log.Error(msg)
@@ -285,9 +285,9 @@ func mainWithExitCode() exitCode {
 	// TODO: Maybe abort execution if (some) metadata can not be collected
 	hostMetadataMap = metadataCollector.GetHostMetadata()
 	// Ilucky...debug
-	for k, v := range hostMetadataMap {
-		log.Errorf("Ilucky...main.go...hostMetadataMap...key=%s,value=%s", k, v) // Ilucky...main.go...hostMetadataMap...key=host:cpu/cache/L1i-kbytes,value=32
-	}
+	//for k, v := range hostMetadataMap {
+	//	log.Errorf("Ilucky...main.go...hostMetadataMap...key=%s,value=%s", k, v) // Ilucky...main.go...hostMetadataMap...key=host:cpu/cache/L1i-kbytes,value=32
+	//}
 
 	if bpfJITEnabled, found := hostMetadataMap["host:sysctl/net.core.bpf_jit_enable"]; found {
 		if bpfJITEnabled == "0" {
@@ -340,7 +340,7 @@ func mainWithExitCode() exitCode {
 
 	// Load the eBPF code and map definitions
 	log.Errorf("Ilucky...main.go...tracer.NewTracer...")
-	trc, err := tracer.NewTracer(mainCtx, rep, times, includeTracers, !argSendErrorFrames) // TODO: Ilucky...core...core...
+	trc, err := tracer.NewTracer(mainCtx, rep, times, includeTracers, !argSendErrorFrames) // TODO: Ilucky...core...
 	if err != nil {
 		msg := fmt.Sprintf("Failed to load eBPF tracer: %s", err)
 		log.Error(msg)

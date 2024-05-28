@@ -209,7 +209,7 @@ func NewTracer(ctx context.Context, rep reporter.SymbolReporter, intervals Inter
 	}
 
 	// Based on includeTracers we decide later which are loaded into the kernel.
-	ebpfMaps, ebpfProgs, err := initializeMapsAndPrograms(includeTracers, kernelSymbols)
+	ebpfMaps, ebpfProgs, err := initializeMapsAndPrograms(includeTracers, kernelSymbols) // TODO: Ilucky...core...
 	if err != nil {
 		return nil, fmt.Errorf("failed to load eBPF code: %v", err)
 	}
@@ -336,13 +336,13 @@ func initializeMapsAndPrograms(includeTracers []bool, kernelSymbols *libpf.Symbo
 	// References to eBPF maps in the eBPF programs are just placeholders that need to be
 	// replaced by the actual loaded maps later on with RewriteMaps before loading the
 	// programs into the kernel.
-	coll, err := support.LoadCollectionSpec() // TODO: Ilucky...core...load ebpf file（根据操作系统）...
+	coll, err := support.LoadCollectionSpec() // TODO: Ilucky...core...load ebpf file...
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to load specification for tracers: %v", err)
 	}
-	for k, v := range coll.Maps {
-		log.Errorf("Ilucky...tracer.go.initializeMapsAndPrograms...coll...k=%s, name=%s, v=%v", k, v.Name, v)
-	}
+	//for k, v := range coll.Maps {
+	//	log.Errorf("Ilucky...tracer.go.initializeMapsAndPrograms...coll...k=%s, name=%s, v.content=%v", k, v.Name, v.Contents)
+	//}
 
 	err = buildStackDeltaTemplates(coll)
 	if err != nil {
@@ -355,8 +355,12 @@ func initializeMapsAndPrograms(includeTracers []bool, kernelSymbols *libpf.Symbo
 	// Load all maps into the kernel that are used later on in eBPF programs. So we can rewrite
 	// in the next step the placesholders in the eBPF programs with the file descriptors of the
 	// loaded maps in the kernel.
-	if err = loadAllMaps(coll, ebpfMaps); err != nil {
+	if err = loadAllMaps(coll, ebpfMaps); err != nil { // TODO: Ilucky...core...Load all maps into the kernel...
 		return nil, nil, fmt.Errorf("failed to load eBPF maps: %v", err)
+	}
+	// Ilucky...debug...
+	for k, v := range ebpfMaps {
+		log.Errorf("Ilucky...tracer.go.initializeMapsAndPrograms...ebpfMaps...k=%s, v=%s", k, v.String())
 	}
 
 	// Replace the place holders for map access in the eBPF programs with
@@ -382,9 +386,13 @@ func initializeMapsAndPrograms(includeTracers []bool, kernelSymbols *libpf.Symbo
 		}
 	}
 
-	if err = loadUnwinders(coll, ebpfProgs, ebpfMaps["progs"],
+	if err = loadUnwinders(coll, ebpfProgs, ebpfMaps["progs"], // TODO: Ilucky...core...
 		includeTracers); err != nil {
 		return nil, nil, fmt.Errorf("failed to load eBPF programs: %v", err)
+	}
+	// Ilucky...debug...
+	for k, v := range ebpfProgs {
+		log.Errorf("Ilucky...tracer.go.initializeMapsAndPrograms...ebpfProgs...k=%s, v=%s", k, v.String())
 	}
 
 	if err = loadSystemConfig(coll, ebpfMaps, kernelSymbols, includeTracers); err != nil {
@@ -447,7 +455,7 @@ func loadAllMaps(coll *cebpf.CollectionSpec, ebpfMaps map[string]*cebpf.Map) err
 	}
 
 	for mapName, mapSpec := range coll.Maps {
-		log.Errorf("Ilucky...tracer.go.loadAllMaps...mapName=%s, name=%s, value=%v, type=%v, contents=%v", mapName, mapSpec.Name, mapSpec.Value, mapSpec.Contents) // Ilucky...tracer.go.loadAllMaps...mapName=v8_procs,mapSpec=Hash(keySize=4, valueSize=28, maxEntries=1024, flags=0)
+		log.Errorf("Ilucky...tracer.go.loadAllMaps...mapName=%s, mapSpec.Name=%v", mapName, mapSpec.Name) // Ilucky...tracer.go.loadAllMaps...mapName=v8_procs,mapSpec=Hash(keySize=4, valueSize=28, maxEntries=1024, flags=0)
 		if newSize, ok := adaption[mapName]; ok {
 			log.Debugf("Size of eBPF map %s: %v", mapName, newSize)
 			mapSpec.MaxEntries = newSize
@@ -472,6 +480,9 @@ func isProgramEnabled(includeTracers []bool, enable []config.TracerType) bool {
 	return false
 }
 
+// TODO: Ilucky: Core...unwindProg是一个用于堆栈展开和分析的工具，它可以帮助开发人员追踪程序的执行路径和了解函数调用关系。在程序执行过程中，
+// 每次函数调用都会在堆栈中创建一个新的帧（frame），包含函数的参数、局部变量以及返回地址等信息。unwindProg可以分析这些堆栈帧，
+// 从而重构出程序执行的函数调用链。
 // loadUnwinders just satisfies the proof of concept and loads all eBPF programs
 func loadUnwinders(coll *cebpf.CollectionSpec, ebpfProgs map[string]*cebpf.Program,
 	tailcallMap *cebpf.Map, includeTracers []bool) error {
@@ -509,7 +520,7 @@ func loadUnwinders(coll *cebpf.CollectionSpec, ebpfProgs map[string]*cebpf.Progr
 			name:   "unwind_native",
 		},
 		{
-			progID: uint32(support.ProgUnwindHotspot),
+			progID: uint32(support.ProgUnwindHotspot), // TODO: Ilucky...unwind_hotspot程序是一个用于分析和优化Java应用程序性能的工具...
 			name:   "unwind_hotspot",
 			enable: []config.TracerType{config.HotspotTracer},
 		},
@@ -553,7 +564,7 @@ func loadUnwinders(coll *cebpf.CollectionSpec, ebpfProgs map[string]*cebpf.Progr
 
 		// Load the eBPF program into the kernel. If no error is returned,
 		// the eBPF program can be used/called/triggered from now on.
-		unwinder, err := cebpf.NewProgramWithOptions(coll.Programs[unwindProg.name],
+		unwinder, err := cebpf.NewProgramWithOptions(coll.Programs[unwindProg.name], // TODO: Ilucky...core...Load EBPF program into the kernel...
 			programOptions)
 		if err != nil {
 			// These errors tend to have hundreds of lines, so we print each line individually.
