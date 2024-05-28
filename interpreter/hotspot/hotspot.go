@@ -1158,7 +1158,7 @@ func (d *hotspotInstance) Detach(ebpf interpreter.EbpfHandler, pid libpf.PID) er
 
 // gatherHeapInfo collects information about HotSpot heaps.
 func (d *hotspotInstance) gatherHeapInfo(vmd *hotspotVMData) (*heapInfo, error) {
-	log.Errorf("Ilucky...hotspot.go...gatherHeapInfo...")
+	log.Errorf("Ilucky...hotspot.go...gatherHeapInfo...") // Ilucky...hotspot.go...gatherHeapInfo...
 	info := &heapInfo{}
 
 	// Determine the location of heap pointers
@@ -1238,7 +1238,7 @@ func (d *hotspotInstance) gatherHeapInfo(vmd *hotspotVMData) (*heapInfo, error) 
 // addJitArea inserts an entry into the PID<->interpreter BPF map.
 func (d *hotspotInstance) addJitArea(ebpf interpreter.EbpfHandler,
 	pid libpf.PID, area jitArea) error {
-	log.Errorf("Ilucky...hotspot.go...addJitArea...")
+	log.Errorf("Ilucky...hotspot.go...addJitArea...") // Ilucky...hotspot.go...addJitArea...
 	prefixes, err := lpm.CalculatePrefixList(uint64(area.start), uint64(area.end))
 	if err != nil {
 		return fmt.Errorf("LPM prefix calculation error for %x-%x", area.start, area.end)
@@ -1272,13 +1272,13 @@ func (d *hotspotInstance) addJitArea(ebpf interpreter.EbpfHandler,
 // about e.g. stub routines is not yet available.
 func (d *hotspotInstance) populateMainMappings(vmd *hotspotVMData,
 	ebpf interpreter.EbpfHandler, pid libpf.PID) error {
-	log.Errorf("Ilucky...hotspot.go...populateMainMappings...")
+	log.Errorf("Ilucky...hotspot.go...populateMainMappings...") // Ilucky...hotspot.go...populateMainMappings...
 	if d.mainMappingsInserted {
 		// Already populated: nothing to do here.
 		return nil
 	}
 
-	heap, err := d.gatherHeapInfo(vmd)
+	heap, err := d.gatherHeapInfo(vmd) // TODO: Ilucky...
 	if err != nil {
 		return err
 	}
@@ -1299,7 +1299,7 @@ func (d *hotspotInstance) populateMainMappings(vmd *hotspotVMData,
 
 		if err = d.addJitArea(ebpf, pid, area); err != nil {
 			return err
-		}
+		} // TODO: Ilucky...
 
 		d.heapAreas = append(d.heapAreas, area)
 	}
@@ -1345,7 +1345,7 @@ func (d *hotspotInstance) populateMainMappings(vmd *hotspotVMData,
 // for them in the PID mappings BPF map.
 func (d *hotspotInstance) updateStubMappings(vmd *hotspotVMData,
 	ebpf interpreter.EbpfHandler, pid libpf.PID) {
-	log.Errorf("Ilucky...hotspot.go...updateStubMappings...")
+	log.Errorf("Ilucky...hotspot.go...updateStubMappings...") // Ilucky...hotspot.go...updateStubMappings...
 	for _, stub := range findStubBounds(vmd, d.bias, d.rm) {
 		if _, exists := d.stubs[stub.start]; exists {
 			continue
@@ -1390,8 +1390,8 @@ func (d *hotspotInstance) updateStubMappings(vmd *hotspotVMData,
 
 func (d *hotspotInstance) SynchronizeMappings(ebpf interpreter.EbpfHandler,
 	_ reporter.SymbolReporter, pr process.Process, _ []process.Mapping) error {
-	log.Errorf("Ilucky...hotspot.go...SynchronizeMappings...")
-	vmd, err := d.d.GetOrInit(d.initVMData) // TODO: Ilucky...core...
+	log.Errorf("Ilucky...hotspot.go...SynchronizeMappings...") // Ilucky...hotspot.go...SynchronizeMappings...
+	vmd, err := d.d.GetOrInit(d.initVMData)                    // TODO: Ilucky...
 	if err != nil {
 		return err
 	}
@@ -1403,7 +1403,7 @@ func (d *hotspotInstance) SynchronizeMappings(ebpf interpreter.EbpfHandler,
 
 	// Populate main mappings, if not done previously.
 	pid := pr.PID()
-	err = d.populateMainMappings(vmd, ebpf, pid)
+	err = d.populateMainMappings(vmd, ebpf, pid) // TODO: Ilucky...
 	if err != nil {
 		return err
 	}
@@ -1412,7 +1412,7 @@ func (d *hotspotInstance) SynchronizeMappings(ebpf interpreter.EbpfHandler,
 		return nil
 	}
 
-	d.updateStubMappings(vmd, ebpf, pid)
+	d.updateStubMappings(vmd, ebpf, pid) // TODO: Ilucky...
 
 	return nil
 }
@@ -1423,7 +1423,7 @@ func (d *hotspotInstance) SynchronizeMappings(ebpf interpreter.EbpfHandler,
 // queued to be sent to collection agent.
 func (d *hotspotInstance) Symbolize(symbolReporter reporter.SymbolReporter,
 	frame *host.Frame, trace *libpf.Trace) error {
-	log.Errorf("Ilucky...hotspot.go...Symbolize...")
+	log.Errorf("Ilucky...hotspot.go...Symbolize...") // Request...Ilucky...hotspot.go...Symbolize...
 	if !frame.Type.IsInterpType(libpf.HotSpot) {
 		return interpreter.ErrMismatchInterpreterType
 	}
@@ -1676,7 +1676,7 @@ func forEachItem(prefix string, t reflect.Value, visitor func(reflect.Value, str
 
 // initVMData will fill hotspotVMData introspection data on first use
 func (d *hotspotInstance) initVMData() (hotspotVMData, error) {
-	log.Errorf("Ilucky...hotspot.go...initVMData...")
+	log.Errorf("Ilucky...hotspot.go...initVMData...") // Ilucky...hotspot.go...initVMData...
 	// Initialize the data with non-zero values so it's easy to check that
 	// everything got loaded (some fields will get zero values)
 	vmd := hotspotVMData{}

@@ -478,7 +478,8 @@ func (pm *ProcessManager) synchronizeMappings(pr process.Process,
 	if pm.interpreterTracerEnabled {
 		pm.mu.Lock()
 		for _, instance := range pm.interpreters[pid] {
-			err := instance.SynchronizeMappings(pm.ebpf, pm.reporter, pr, mappings)
+			log.Errorf("Ilucky...processinfo.go...synchronizeMappings...instance=%v", instance)
+			err := instance.SynchronizeMappings(pm.ebpf, pm.reporter, pr, mappings) // Ilucky...
 			if err != nil {
 				if alive, _ := proc.IsPIDLive(pid); alive {
 					log.Errorf("Failed to handle new anonymous mapping for PID %d: %v", pid, err)

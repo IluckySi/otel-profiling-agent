@@ -103,12 +103,14 @@ bpf_map_def SEC("maps") hotspot_procs = {
 // Record a HotSpot frame
 static inline __attribute__((__always_inline__))
 ErrorCode push_hotspot(Trace *trace, u64 file, u64 line) {
+  DEBUG_PRINT("Ilucky...hotspot_tracer.ebpf.c...push_hotspot...");
   return _push(trace, file, line, FRAME_MARKER_HOTSPOT);
 }
 
 // calc_line merges the three values to be encoded in a frame 'line'
 static inline __attribute__((__always_inline__))
 u64 calc_line(u8 subtype, u32 pc_or_bci, u32 ptr_check) {
+  DEBUG_PRINT("Ilucky...hotspot_tracer.ebpf.c...calc_line...");
   return ((u64)subtype << 60) | ((u64)pc_or_bci << 32) | (u64)ptr_check;
 }
 
@@ -116,6 +118,7 @@ u64 calc_line(u8 subtype, u32 pc_or_bci, u32 ptr_check) {
 // hotspot_addr_in_codecache checks if given address belongs to the JVM JIT code cache
 __attribute__((always_inline)) inline static
 bool hotspot_addr_in_codecache(u32 pid, u64 addr) {
+  DEBUG_PRINT("Ilucky...hotspot_tracer.ebpf.c...hotspot_addr_in_codecache...");
   PIDPage key = {};
   key.prefixLen = BIT_WIDTH_PID + BIT_WIDTH_PAGE;
   key.pid = __constant_cpu_to_be32(pid);
@@ -141,6 +144,7 @@ bool hotspot_addr_in_codecache(u32 pid, u64 addr) {
 static inline __attribute__((__always_inline__))
 u64 hotspot_find_codeblob(const UnwindState *state, const HotspotProcInfo *ji)
 {
+  DEBUG_PRINT("Ilucky...hotspot_tracer.ebpf.c...hotspot_find_codeblob...");
   unsigned long segment, codeblob, segmap_start;
   u8 tag;
 
@@ -659,6 +663,7 @@ ErrorCode hotspot_handle_stub(const UnwindState *state, const CodeBlobInfo *cbi,
 __attribute__((always_inline)) inline static
 ErrorCode hotspot_execute_unwind_action(CodeBlobInfo *cbi, HotspotUnwindAction action,
                                         HotspotUnwindInfo *ui, UnwindState *state, Trace *trace) {
+  DEBUG_PRINT("Ilucky...hotspot_tracer.ebpf.c...hotspot_execute_unwind_action...");
   switch (action) {
     case UA_UNWIND_INVALID:
       return ERR_UNREACHABLE;
@@ -834,6 +839,7 @@ static ErrorCode hotspot_unwind_one_frame(PerCPURecord *record, HotspotProcInfo 
 // native frames that follow.
 SEC("perf_event/unwind_hotspot")
 int unwind_hotspot(struct pt_regs *ctx) {
+  DEBUG_PRINT("Ilucky...hotspot_tracer.ebpf.c...unwind_hotspot...");
   PerCPURecord *record = get_per_cpu_record();
   if (!record)
     return -1;
