@@ -10,6 +10,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"reflect"
+	"runtime"
 
 	"github.com/elastic/otel-profiling-agent/config"
 	"github.com/elastic/otel-profiling-agent/host"
@@ -121,7 +123,7 @@ func NewExecutableInfoManager(
 // of getters and more complicated locking semantics.
 func (mgr *ExecutableInfoManager) AddOrIncRef(fileID host.FileID,
 	elfRef *pfelf.Reference) (ExecutableInfo, error) {
-	log.Errorf("Ilucky...manager.go...AddOrIncRef...")
+	log.Errorf("Ilucky...manager.go...AddOrIncRef...") // Ilucky...manager.go...AddOrIncRef...
 	var (
 		intervalData sdtypes.IntervalData
 		tsdInfo      *tpbase.TSDInfo
@@ -164,7 +166,7 @@ func (mgr *ExecutableInfoManager) AddOrIncRef(fileID host.FileID,
 	}
 
 	// Load the data into BPF maps.
-	ref, gaps, err = state.loadDeltas(fileID, intervalData.Deltas) // TODO: ilucky...???
+	ref, gaps, err = state.loadDeltas(fileID, intervalData.Deltas)
 	if err != nil {
 		return ExecutableInfo{}, fmt.Errorf("failed to load deltas: %w", err)
 	}
@@ -298,10 +300,10 @@ type executableInfoManagerState struct {
 // interpreter data.
 func (state *executableInfoManagerState) detectAndLoadInterpData(
 	loaderInfo *interpreter.LoaderInfo) interpreter.Data {
-	log.Errorf("Ilucky...mananger.go...detectAndLoadInterpData...")
+	log.Errorf("Ilucky...mananger.go...detectAndLoadInterpData...") // Ilucky...mananger.go...detectAndLoadInterpData...
 	// Ask all interpreter loaders whether they want to handle this executable.
 	for _, loader := range state.interpreterLoaders {
-		log.Errorf("Ilucky...mananger.go...detectAndLoadInterpData..._loader=%v", loader)
+		log.Errorf("Ilucky...mananger.go...detectAndLoadInterpData..._loader=%v", runtime.FuncForPC(reflect.ValueOf(loader).Pointer()).Name()) // Ilucky...mananger.go...detectAndLoadInterpData..._loader=0xc8a180
 		data, err := loader(state.ebpf, loaderInfo)
 		if err != nil {
 			if errors.Is(err, os.ErrNotExist) {
@@ -333,6 +335,7 @@ func (state *executableInfoManagerState) loadDeltas(
 	fileID host.FileID,
 	deltas []sdtypes.StackDelta,
 ) (ref mapRef, gaps []libpf.Range, err error) {
+	log.Errorf("Ilucky...manager.go...loadDeltas...")
 	numDeltas := len(deltas)
 	if numDeltas == 0 {
 		// If no deltas are extracted, cache the result but don't reserve memory in BPF maps.

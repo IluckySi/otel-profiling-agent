@@ -329,7 +329,7 @@ func buildStackDeltaTemplates(coll *cebpf.CollectionSpec) error {
 // by the embedded elf file and loads these into the kernel.
 func initializeMapsAndPrograms(includeTracers []bool, kernelSymbols *libpf.SymbolMap) (
 	ebpfMaps map[string]*cebpf.Map, ebpfProgs map[string]*cebpf.Program, err error) {
-	log.Errorf("Ilucky...tracer.go.initializeMapsAndPrograms...")
+	log.Errorf("Ilucky...tracer.go.initializeMapsAndPrograms...") // Ilucky...tracer.go.initializeMapsAndPrograms...
 	// Loading specifications about eBPF programs and maps from the embedded elf file
 	// does not load them into the kernel.
 	// A collection specification holds the information about eBPF programs and maps.
@@ -360,7 +360,7 @@ func initializeMapsAndPrograms(includeTracers []bool, kernelSymbols *libpf.Symbo
 	}
 	// Ilucky...debug...
 	for k, v := range ebpfMaps {
-		log.Errorf("Ilucky...tracer.go.initializeMapsAndPrograms...ebpfMaps...k=%s, v=%s", k, v.String())
+		log.Errorf("Ilucky...tracer.go.initializeMapsAndPrograms...ebpfMaps...k=%s, v=%s", k, v.String()) // Ilucky...tracer.go.initializeMapsAndPrograms...ebpfMaps...k=py_procs, v=Hash(py_procs)#39
 	}
 
 	// Replace the place holders for map access in the eBPF programs with
@@ -392,7 +392,7 @@ func initializeMapsAndPrograms(includeTracers []bool, kernelSymbols *libpf.Symbo
 	}
 	// Ilucky...debug...
 	for k, v := range ebpfProgs {
-		log.Errorf("Ilucky...tracer.go.initializeMapsAndPrograms...ebpfProgs...k=%s, v=%s", k, v.String())
+		log.Errorf("Ilucky...tracer.go.initializeMapsAndPrograms...ebpfProgs...k=%s, v=%s", k, v.String()) // Ilucky...tracer.go.initializeMapsAndPrograms...ebpfProgs...k=unwind_hotspot, v=PerfEvent(unwind_hotspot)#46
 	}
 
 	if err = loadSystemConfig(coll, ebpfMaps, kernelSymbols, includeTracers); err != nil {
@@ -455,7 +455,7 @@ func loadAllMaps(coll *cebpf.CollectionSpec, ebpfMaps map[string]*cebpf.Map) err
 	}
 
 	for mapName, mapSpec := range coll.Maps {
-		log.Errorf("Ilucky...tracer.go.loadAllMaps...mapName=%s, mapSpec.Name=%v", mapName, mapSpec.Name) // Ilucky...tracer.go.loadAllMaps...mapName=v8_procs,mapSpec=Hash(keySize=4, valueSize=28, maxEntries=1024, flags=0)
+		log.Errorf("Ilucky...tracer.go.loadAllMaps...mapName=%s, mapSpec.Name=%v", mapName, mapSpec.Name) // Ilucky...tracer.go.loadAllMaps...mapName=progs, mapSpec.Name=progs
 		if newSize, ok := adaption[mapName]; ok {
 			log.Debugf("Size of eBPF map %s: %v", mapName, newSize)
 			mapSpec.MaxEntries = newSize
@@ -605,7 +605,7 @@ func (t *Tracer) populatePIDs(ctx context.Context) error {
 			case <-ctx.Done():
 				return nil
 			case t.pidEvents <- pid:
-				goto next_pid
+				goto next_pid // TODO: Ilucky...Why not use break???
 			default:
 				// Workaround to implement a non blocking send to a channel.
 				// To avoid a busy loop on this non blocking channel send operation

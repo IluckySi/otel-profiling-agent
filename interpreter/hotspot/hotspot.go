@@ -1932,7 +1932,7 @@ func Loader(_ interpreter.EbpfHandler, info *interpreter.LoaderInfo) (interprete
 		return nil, err
 	}
 
-	if ptr, err := locateJvmciVMStructs(ef); err == nil { // TODO: Ilucky...core...
+	if ptr, err := locateJvmciVMStructs(ef); err == nil { // TODO: Ilucky...
 		// Everything except for the base pointer is identical.
 		d.jvmciStructPtrs = d.structPtrs
 		d.jvmciStructPtrs.base = ptr
