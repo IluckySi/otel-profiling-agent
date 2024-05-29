@@ -865,5 +865,10 @@ exit:
 SEC("perf_event/native_tracer_entry")
 int native_tracer_entry(struct bpf_perf_event_data *ctx) {
   printt("****************native_tracer_entry**************************");
+  printt("native_tracer_entry...ctx.sample_period->" + ctx->sample_period);
+  printt("native_tracer_entry...ctx.sample_type->" + ctx->sample_type);
+  printt("native_tracer_entry...ctx.cpu->" + ctx->cpu);
+  printt("native_tracer_entry...ctx.raw_data ->" + ctx->raw_data);
+
   return collect_trace((struct pt_regs*) &ctx->regs);
 }

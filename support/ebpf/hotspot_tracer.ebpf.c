@@ -517,7 +517,7 @@ __attribute__((always_inline)) inline static
 ErrorCode hotspot_handle_nmethod(const CodeBlobInfo *cbi, Trace *trace,
                                  HotspotUnwindInfo *ui, HotspotProcInfo *ji,
                                  HotspotUnwindAction *action) {
-  printt("****************hotspot_handle_nmethod**************************");
+  printt("****************hotspot_handle_nmethod**************************  ");
   // setup frame subtype, and get the native method _compile_id as pointer cookie
   // as it is unique to the compilation result
 
