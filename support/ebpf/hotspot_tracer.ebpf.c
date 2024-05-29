@@ -857,7 +857,7 @@ int unwind_hotspot(struct pt_regs *ctx) {
   DEBUG_PRINT("==== jvm: unwind %d ====", trace->stack_len);
 
   HotspotProcInfo *ji = bpf_map_lookup_elem(&hotspot_procs, &pid);
-  if (!ji) {
+  if (!ji) {Ï
     DEBUG_PRINT("jvm: no HotspotProcInfo for this pid");
     return 0;
   }
