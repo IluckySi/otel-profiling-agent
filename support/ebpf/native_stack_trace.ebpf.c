@@ -277,7 +277,7 @@ static ErrorCode get_stack_delta(u64 text_section_id, u64 text_section_offset,
 //      *(BASE + preDeref) + postDeref
 static inline __attribute__((__always_inline__))
 u64 unwind_register_address(UnwindState *state, u64 cfa, u8 opcode, s32 param) {
-  DEBUG_PRINT("Ilucky...native_tracer.entry.ebpf.c...unwind_register_address...");
+  printt("****************unwind_register_address**************************");
   unsigned long addr, val;
   s32 preDeref = param, postDeref = 0;
 
@@ -371,6 +371,7 @@ u64 unwind_register_address(UnwindState *state, u64 cfa, u8 opcode, s32 param) {
 // thread spawn function, signal handlers, ...).
 #if defined(__x86_64__)
 static ErrorCode unwind_one_frame(u64 pid, u32 frame_idx, UnwindState *state, bool* stop) {
+  printt("****************unwind_one_frame**************************");
   *stop = false;
 
   u32 unwindInfo = 0;
@@ -456,6 +457,7 @@ frame_ok:
 }
 #elif defined(__aarch64__)
 static ErrorCode unwind_one_frame(u64 pid, u32 frame_idx, struct UnwindState *state, bool* stop) {
+  printt("****************unwind_one_frame**************************");
   get_arm64_ptregs_size
   *stop = false;
 
@@ -583,6 +585,7 @@ frame_ok:
 // Initialize state from pt_regs
 static inline void copy_state_regs(UnwindState *state, struct pt_regs *regs)
 {
+printt("****************copy_state_regs**************************");
 #if defined(__x86_64__)
   state->pc = regs->ip;
   state->sp = regs->sp;
@@ -605,7 +608,7 @@ static inline void copy_state_regs(UnwindState *state, struct pt_regs *regs)
 // help of a simple heuristic, this size is needed for locating user process
 // registers on kernel stack
 static inline u64 get_arm64_ptregs_size(u64 stack_top) {
-  DEBUG_PRINT("Ilucky...native_tracer.entry.ebpf.c...get_arm64_ptregs_size...");
+  printt("****************get_arm64_ptregs_size**************************");
   // this var should be static, but verifier complains, in the meantime
   // just leave it here
   u32 key0 = 0;
@@ -665,6 +668,7 @@ exit:
 // Convert kernel stack pointer to pt_regs pointers at the top-of-stack.
 static inline void *get_kernel_stack_ptregs(u64 addr)
 {
+printt("****************get_kernel_stack_ptregs**************************");
 #if defined(__x86_64__)
   // Fortunately on x86_64 IRQ_STACK_SIZE = THREAD_SIZE. Both depend on
   // CONFIG_KASAN, but that can be assumed off on all production systems.
@@ -690,7 +694,7 @@ static inline void *get_kernel_stack_ptregs(u64 addr)
 static inline ErrorCode get_usermode_regs(struct pt_regs *ctx,
                                           UnwindState *state,
                                           bool *has_usermode_regs) {
-  DEBUG_PRINT("Ilucky...native_tracer.entry.ebpf.c...get_usermode_regs...");
+  printt("****************get_usermode_regs**************************");
   if (is_kernel_address(ctx->sp)) {
     // We are in kernel mode stack. There are several different kind kernel
     // stacks. See get_stack_info() in arch/x86/kernel/dumpstack_64.c
@@ -752,7 +756,7 @@ static inline ErrorCode get_usermode_regs(struct pt_regs *ctx,
 
 SEC("perf_event/unwind_native")
 int unwind_native(struct pt_regs *ctx) {
-  DEBUG_PRINT("Ilucky...native_tracer.entry.ebpf.c...unwind_native...");
+  printt("****************unwind_native**************************");
   PerCPURecord *record = get_per_cpu_record();
   if (!record)
     return -1;
@@ -804,7 +808,7 @@ int unwind_native(struct pt_regs *ctx) {
 
 static inline
 int collect_trace(struct pt_regs *ctx) {
-  DEBUG_PRINT("Ilucky...native_stack_trace.pebf.c...collect_trace...");
+  printt("****************collect_trace**************************");
   // Get the PID and TGID register.
   u64 id = bpf_get_current_pid_tgid();
   u64 pid = id >> 32;
@@ -860,6 +864,6 @@ exit:
 
 SEC("perf_event/native_tracer_entry")
 int native_tracer_entry(struct bpf_perf_event_data *ctx) {
-  DEBUG_PRINT("Ilucky...native_tracer.entry.ebpf.c...native_tracer_entry...");
+  printt("****************native_tracer_entry**************************");
   return collect_trace((struct pt_regs*) &ctx->regs);
 }
