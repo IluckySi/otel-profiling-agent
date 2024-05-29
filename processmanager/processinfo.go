@@ -575,9 +575,9 @@ func (pm *ProcessManager) SynchronizeProcess(pr process.Process) {
 	// log.Debugf("= PID: %v", pid)
 
 	// TODO: Ilucky...DEBUG...目的是尽量少打印一些日志...
-	if pid != 677596 {
-		return
-	}
+	//if pid != 677596 {
+	//	return
+	//}
 	log.Errorf("Ilucky...processinfo.go.SynchronizeProcess...pid=%d", pid) // Ilucky...processinfo.go.SynchronizeProcess...pid=677596
 
 	pm.mappingStats.numProcAttempts.Add(1)

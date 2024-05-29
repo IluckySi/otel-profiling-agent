@@ -846,7 +846,7 @@ static ErrorCode hotspot_unwind_one_frame(PerCPURecord *record, HotspotProcInfo 
 // native frames that follow.
 SEC("perf_event/unwind_hotspot")
 int unwind_hotspot(struct pt_regs *ctx) {
-  printt("******************************************\n");
+  printt("****************perf_event/unwind_hotspot**************************\n");
   DEBUG_PRINT("Ilucky...hotspot_tracer.ebpf.c...unwind_hotspot...");
   PerCPURecord *record = get_per_cpu_record();
   if (!record)

@@ -327,6 +327,7 @@ func StartOTLP(mainCtx context.Context, c *Config) (Reporter, error) {
 			case <-r.stopSignal:
 				return
 			case <-tick.C:
+
 				if err := r.reportOTLPProfile(ctx); err != nil {
 					log.Errorf("Request failed: %v", err)
 				}
