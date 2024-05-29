@@ -837,6 +837,7 @@ int collect_trace(struct pt_regs *ctx) {
   // Get the kernel mode stack trace first
   trace->kernel_stack_id = bpf_get_stackid(ctx, &kernel_stackmap, BPF_F_REUSE_STACKID);
   DEBUG_PRINT("kernel stack id = %d", trace->kernel_stack_id);
+  printt("collect_trace...trace->kernel_stack_id->%d", trace->kernel_stack_id);
 
   // Recursive unwind frames
   int unwinder = PROG_UNWIND_STOP;
@@ -865,10 +866,10 @@ exit:
 SEC("perf_event/native_tracer_entry")
 int native_tracer_entry(struct bpf_perf_event_data *ctx) {
   printt("****************native_tracer_entry**************************");
-  printt("native_tracer_entry...ctx.sample_period->%d", *ctx->sample_period);
-  printt("native_tracer_entry...ctx.sample_type->%d", *ctx->sample_type);
-  printt("native_tracer_entry...ctx.cpu->%d", *ctx->cpu);
-  printt("native_tracer_entry...ctx.raw_data ->%d", *ctx->raw_data);
+//  printt("native_tracer_entry...ctx.sample_period->%d", *ctx->sample_period);
+//  printt("native_tracer_entry...ctx.sample_type->%d", *ctx->sample_type);
+//  printt("native_tracer_entry...ctx.cpu->%d", ctx->cpu);
+//  printt("native_tracer_entry...ctx.raw_data ->%d", *ctx->raw_data);
 
   return collect_trace((struct pt_regs*) &ctx->regs);
 }
