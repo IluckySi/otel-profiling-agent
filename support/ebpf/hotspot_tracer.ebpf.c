@@ -828,6 +828,7 @@ static ErrorCode hotspot_unwind_one_frame(PerCPURecord *record, HotspotProcInfo 
     err = hotspot_handle_vtable_chunks(&ui, &action);
     break;
   default: // stubs and intrinsic functions (too many to list)
+    printt("Ilucky...hotspot_handle_stub...");
     err = hotspot_handle_stub(state, &cbi, &ui, &action);
   }
 
@@ -843,7 +844,7 @@ static ErrorCode hotspot_unwind_one_frame(PerCPURecord *record, HotspotProcInfo 
 // native frames that follow.
 SEC("perf_event/unwind_hotspot")
 int unwind_hotspot(struct pt_regs *ctx) {
-  printt("****************unwind_hotspot********************");
+  printt("Ilucky...unwind_hotspot...");
   PerCPURecord *record = get_per_cpu_record();
   if (!record)
     return -1;
@@ -851,6 +852,7 @@ int unwind_hotspot(struct pt_regs *ctx) {
   Trace *trace = &record->trace;
   pid_t pid = trace->pid;
   DEBUG_PRINT("==== jvm: unwind %d ====", trace->stack_len);
+  printt("Ilucky...unwind_hotspot...trace->pid->%d", pid);
 
   HotspotProcInfo *ji = bpf_map_lookup_elem(&hotspot_procs, &pid);
   if (!ji) {
